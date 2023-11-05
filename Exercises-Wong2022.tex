@@ -1,0 +1,348 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys460}
+
+\title{PHYS460 - Exercises from Wong 2022}
+\author{John Hurst}
+\date{November 2023}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.1}{How many possible states do (a) four coins have? (b) five coins?
+}
+
+Four coins have $2^4=16$ possible states.
+Five coins have $2^5=32$ possible states.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.2}{How many possible states do (a) four dice have? (b) five dice?
+}
+
+Four dice have $6^4=1296$ possible states.
+Five dice have $6^5=7776$ possible states.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.3}{Some board games use a twenty-sided die. How many twenty-sided dice does it take to code the seven colors of the rainbow?
+}
+
+Seven colors can be encoded with a single twenty-sided die, because $7<20$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.4}{How many (a) coins and (b) six-sided dice would it take to represent the 26 letters of the English alphabet?
+Ignore upper and lowercase, spaces, punctuation etc, so there's only 26 letters total.
+}
+
+26 letters can be encoded with 5 coins, because $2^5=32>26$.
+The letters can be encoded with two dice, because $6^2=36>26$.
+
+Another way to compute it is to use the logarithm:
+\begin{align*}
+\ceil{\log_2{26}} &= 5 \\
+\ceil{\log_6{26}} &= 2
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.5}{Convert the following binary (base 2) numbers to decimal numbers (base 10): (a) $10111_2$, (b) $11001010_2$.
+}
+
+\begin{align*}
+2^4+2^2+2^1+2^0 &= 16+4+2+1 = 23 \\
+2^7+2^6+2^3+2^1 &= 128+64+8+2 = 202
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.6}{Convert the following decimal (base 10) numbers to binary numbers (base 2): (a) $42$, (b) $495$.
+}
+
+\begin{enumerate}[itemsep=-2mm]
+\item Divide 42 by 2: the result is 21, with remainder 0.
+\item Divide 21 by 2: the result is 10, with remainder 1.
+\item Divide 10 by 2: the result is 5, with remainder 0.
+\item Divide 5 by 2: the result is 2, with remainder 1.
+\item Divide 2 by 2: the result is 1, with remainder 0.
+\item Divide 1 by 2: the result is 0, with remainder 1.
+\item The binary number is $101010_2$.
+\end{enumerate}
+
+\begin{enumerate}[itemsep=-2mm]
+\item Divide 495 by 2: the result is 247, with remainder 1.
+\item Divide 247 by 2: the result is 123, with remainder 1.
+\item Divide 123 by 2: the result is 61, with remainder 1.
+\item Divide 61 by 2: the result is 30, with remainder 1.
+\item Divide 30 by 2: the result is 15, with remainder 0.
+\item Divide 15 by 2: the result is 7, with remainder 1.
+\item Divide 7 by 2: the result is 3, with remainder 1.
+\item Divide 3 by 2: the result is 1, with remainder 1.
+\item Divide 1 by 2: the result is 0, with remainder 1.
+\item The binary number is $111101111_2$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.7}{Base 16, commonly called hexadecimal, is another frequently used number system in computing. The sixteen digits are 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F. So the letter A is ten in decimal, ... and F is fifteen in decimal.
+\begin{enumerate}[(a)]
+\item Convert the hexadecimal number 3B7C to a decimal (base 10) number.
+\item Convert the hexadecimal number FF to a binary (base 2) number. (So two hexadecimal numbers can represent eight bits.)
+\item Convert the hexadecimal numbers FA, 10 and E4 to decimal.
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item $16^3\times 3 + 16^2\times 11 + 16^1\times 7 + 16^0\times 12 = 15228$.
+\item $FF_{16} = 11111111_2$.
+\item $16\times 15 + 10 = 250$, $16 + 0 = 16$, $16\times 14 + 4 = 228$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.8}{Negative numbers can be encoded in binary using \textit{two's complement},
+where the most significant bit is negative, while the remaining bits are positive.
+Convert each of these two's complement numbers to decimal: 000, 001, 010, 011, 100, 101, 110, 111.
+}
+\begin{center}
+\begin{tabular}{|c|r|}
+    \hline
+    Binary & Decimal \\
+    \hline
+    000 & 0 \\
+    001 & 1 \\
+    010 & 2 \\
+    011 & 3 \\
+    100 & -4 \\
+    101 & -3 \\
+    110 & -2 \\
+    111 & -1 \\
+    \hline
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.9}{Write your name as an ASCII bit string.
+}
+
+\texttt{"John Hurst"} is encoded as
+\begin{center}
+\begin{tabular}{|c|c|c|}
+    \hline
+    Character & ASCII & Binary \\
+    \hline
+    J & 74 & 01001010 \\
+    o & 111 & 01101111 \\
+    h & 104 & 01101000 \\
+    n & 110 & 01101110 \\
+    (space) & 32 & 00100000 \\
+    H & 72 & 01001000 \\
+    u & 117 & 01110101 \\
+    r & 114 & 01110010 \\
+    s & 115 & 01110011 \\
+    t & 116 & 01110100 \\
+    \hline
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.10}{Decode the following ASCII characters: 1010001, 1110101, 1100001, 1101110, 1110100, 1110101, 1101101.
+}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+    \hline
+    Binary & ASCII & Character \\
+    \hline
+    01010001 & 81 & Q \\
+    01110101 & 117 & u \\
+    01100001 & 97 & a \\
+    01101110 & 110 & n \\
+    01110100 & 116 & t \\
+    01110101 & 117 & u \\
+    01101101 & 109 & m \\
+    \hline
+\end{tabular}
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.11}{Consider the following gate that inverts the inputs before passing them into an OR gate, sometimes called a \textit{negative-OR gate}:
+
+\begin{center}
+\begin{circuitikz}
+    \ctikzset{color=blue}
+    % NOT gates and an OR gate to represent NOT(A) OR NOT(B)
+    \draw
+    (0,0) node[not port] (nota) {}
+    (0,-2) node[not port] (notb) {}
+    (nota.in) node[anchor=east] {A}
+    (notb.in) node[anchor=east] {B}
+    (3,-1) node[or port] (myor) {}
+    (nota.out) -| (myor.in 1)
+    (notb.out) -| (myor.in 2)
+    (myor.out) node[anchor=west] {NOT(A) OR NOT(B)};
+\end{circuitikz}
+\end{center}
+
+\begin{enumerate}[(a)]
+\item Write the truth table for this circuit.
+\item What logic gate is this equivalent to?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item The truth table is:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+    \hline
+    A & B & NOT(A) OR NOT(B) \\
+    \hline
+    0 & 0 & 1 \\
+    0 & 1 & 1 \\
+    1 & 0 & 1 \\
+    1 & 1 & 0 \\
+    \hline
+\end{tabular}
+\end{center}
+\item This is equivalent to a NAND gate.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.12}{Consider the following gate that inverts the inputs before passing them into an AND gate, sometimes called a \textit{negative-AND gate}:
+
+\begin{center}
+\begin{circuitikz}
+    \ctikzset{color=blue}
+    % NOT gates and an AND gate to represent NOT(A) AND NOT(B)
+    \draw
+    (0,0) node[not port] (nota) {}
+    (0,-2) node[not port] (notb) {}
+    (nota.in) node[anchor=east] {A}
+    (notb.in) node[anchor=east] {B}
+    (3,-1) node[and port] (myand) {}
+    (nota.out) -| (myand.in 1)
+    (notb.out) -| (myand.in 2)
+    (myand.out) node[anchor=west] {NOT(A) AND NOT(B)};
+\end{circuitikz}
+\end{center}
+
+\begin{enumerate}[(a)]
+\item Write the truth table for this circuit.
+\item What logic gate is this equivalent to?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item The truth table is:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+    \hline
+    A & B & NOT(A) AND NOT(B) \\
+    \hline
+    0 & 0 & 1 \\
+    0 & 1 & 0 \\
+    1 & 0 & 0 \\
+    1 & 1 & 0 \\
+    \hline
+\end{tabular}
+\end{center}
+\item This is equivalent to a NOR gate.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.13}{Consider the following electrical circuit:
+
+\begin{center}
+\begin{circuitikz}
+    \ctikzset{color=blue}
+    \draw (0,0) to[battery] (0,4); % Battery, vertical
+    \draw (3,0) to[spst, l=B] (3,2) % Switch B
+                to[spst, l=A] (3,4); % Switch A
+    \draw (6,0) to[lamp, l=Output] (6,4); % Lightbulb (lamp) as Output
+    \draw (0,4) -- (6,4); % Wire to the parallel path
+    \draw (0,0) -- (6,0); % Closing the circuit
+\end{circuitikz}
+\end{center}
+
+Answer the following questions:
+\begin{enumerate}[(a)]
+\item Say $A=0$ and $B=0$. Is the light bulb off or on?
+\item Say $A=0$ and $B=1$. Is the light bulb off or on?
+\item Say $A=1$ and $B=0$. Is the light bulb off or on?
+\item Say $A=1$ and $B=1$. Is the light bulb off or on?
+\item What logic gate does this circuit correspond to?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item When both switches are off, the current flows through the light bulb, so it is on.
+\item When switch $A$ is off, the current flows through the light bulb, so it is on.
+\item When switch $B$ is off, the current flows through the light bulb, so it is on.
+\item When both switches are on, the current flows through the switches, so the light bulb is off.
+\item This circuit corresponds to a NAND gate.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.14}{Consider the following electrical circuit:
+\begin{center}
+\begin{circuitikz}
+    \ctikzset{color=blue}
+    \draw (0,4) to[battery] (3,4) -- (6,4); % Battery
+    \draw (0,0) -- (6,0);
+    \draw (0,0) to [lamp, l=Output] (0,4); % Lightbulb (lamp) as Output
+    \draw (3,0) to [spst, l=A] (3,4); % Switch A
+    \draw (6,0) to [spst, l=B] (6,4); % Switch B
+\end{circuitikz}
+\end{center}
+
+Answer the following questions:
+\begin{enumerate}[(a)]
+\item Say $A=0$ and $B=0$. Is the light bulb off or on?
+\item Say $A=0$ and $B=1$. Is the light bulb off or on?
+\item Say $A=1$ and $B=0$. Is the light bulb off or on?
+\item Say $A=1$ and $B=1$. Is the light bulb off or on?
+\item What logic gate does this circuit correspond to?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item When both switches are off, the current does not flow, so the light bulb is off.
+\item When switch $A$ is off, and switch $B$ is on, the current flows through switch $B$, so the light bulb is on.
+\item When switch $A$ is on, and switch $B$ is off, the current flows through switch $A$, so the light bulb is on.
+\item When both switches are on, the current flows through both switches, so the light bulb is on.
+\item This circuit corresponds to an OR gate.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.15}{Consider the following electrical circuit:
+\begin{center}
+\begin{circuitikz}
+    \ctikzset{color=blue}
+    \draw (0,0) to[battery] (0,4); % Battery, vertical
+    \draw (2,0) to [spst, l=A] (2,4); % Switch A
+    \draw (4,0) to [spst, l=B] (4,4); % Switch B
+    \draw (6,0) to [lamp, l=Output] (6,4); % Lightbulb (lamp) as Output
+    \draw (0,0) -- (6,0);
+    \draw (0,4) -- (6,4);
+\end{circuitikz}
+\end{center}
+
+Answer the following questions:
+\begin{enumerate}[(a)]
+\item Say $A=0$ and $B=0$. Is the light bulb off or on?
+\item Say $A=0$ and $B=1$. Is the light bulb off or on?
+\item Say $A=1$ and $B=0$. Is the light bulb off or on?
+\item Say $A=1$ and $B=1$. Is the light bulb off or on?
+\item What logic gate does this circuit correspond to?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item When both switches are off, the current flows through the light bulb, so it is on.
+\item When switch $A$ is off and switch $B$ is on, the current flows through switch $B$, so the light bulb is off.
+\item When switch $A$ is on and switch $B$ is off, the current flows through switch $A$, so the light bulb is off.
+\item When both switches are on, the current flows through both switches, so the light bulb is off.
+\item This circuit corresponds to a NOR gate.
+\end{enumerate}
+
+% \printbibliography
+% \addcontentsline{toc}{section}{References}
+
+\end{document}

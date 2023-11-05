@@ -1,0 +1,77 @@
+% Copyright 2023 John Hurst
+% John Hurst (john.b.hurst@gmail.com)
+% 2023-11-05
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{arev}
+\usepackage[maxbibnames=99]{biblatex}
+\usepackage[makeroom]{cancel}
+\usepackage{circuitikz}
+\usepackage{csquotes}
+\usepackage[shortlabels]{enumitem}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{pifont}
+\usepackage{physics}
+\usepackage{tensor}
+\usepackage{tikz}
+\usepackage{wasysym}
+\usepackage{xcolor}
+
+\addbibresource{phys460.bib}
+\setlength{\parskip}{1em}
+\linespread{1.3}
+\geometry{a4paper,margin=0.75in}
+\graphicspath{{./images/}}
+\usetikzlibrary{arrows,positioning,quotes}
+
+\definecolor{darkgreen}{RGB}{0, 150, 0}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[lemma]{Definition}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\qtext}[1]{{\color{blue}{#1}}}
+\newcommand{\question}[2]{{\par\noindent\rule{\textwidth}{0.4pt}
+\qtext{\textbf{{#1}.} #2}}}
+\newcommand{\query}[1]{{\color{violet}{#1}}}
+\newcommand{\todo}[1]{{\color{red}{TODO: #1}}}
+\newcommand{\expl}[1]{{\color{darkgreen}\left(\text{#1}\right)}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\scrF}{\mathscr{F}}
+\newcommand{\inv}[1]{{{#1}^{-1}}}
+\newcommand{\opnorm}[1]{\norm{#1}_{\text{op}}} % operator norm
+\newcommand{\qqq}{\textrm{\color{red}{???}}}
+\newcommand{\rvline}{\hspace*{-\arraycolsep}\vline\hspace*{-\arraycolsep}}
+\newcommand{\hhline}{{\par\noindent\rule{\textwidth}{0.4pt}}}
+\newcommand*\interior[1]{{#1}^{\circ}}
+\newcommand*\closure[1]{\overline{#1}}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Lip}{Lip}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\ipr{\langle}{\rangle}
+\renewcommand \thesection{\Roman{section}}
+\renewcommand{\labelitemi}{\ding{95}}
