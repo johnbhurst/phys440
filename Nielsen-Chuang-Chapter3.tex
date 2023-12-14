@@ -1,0 +1,64 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys460}
+
+\title{PHYS460 - Exercises from Nielsen and Chuang (2016)}
+\author{John Hurst}
+\date{December 2023}
+
+\begin{document}
+\maketitle
+
+% \tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.1}{(Non-computable processes in Nature) How might we recognize that a process in Nature computes a function not computable by a Turing machine?
+}
+
+If a process in Nature contains any random element, then it cannot be exactly computed by a Turing machine, because Turing machines are completely deterministic.
+(It may be possible to approximate or simulate the process with a Turing machine, using pseudorandom numbers.)
+
+If a process in Nature is continuous, then it cannot be computed by a Turing machine, because Turing machines are discrete.
+(It may be possible to approximate the process to arbitrary accuracy, using rational numbers.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.2}{(Turing numbers) That that single-tape Turing machines can each be given a number from the list 1, 2, 3, ... in such a way that the number uniquely specifies the corresponding machine.
+We call this number the \textit{Turing number} of the corresponding machine.
+}
+
+Let's suppose that our machine has the minimal alphabet $\Gamma = \{0, 1, \square, \vartriangleright\}$,
+and that there are $m$ states $q_1, q_2, \ldots, q_m$, besides the special states $q_s, q_h$.
+
+With these fixed, a given Turing machine is uniquely determined by its \textit{program}, which is an ordered list of program lines:
+\begin{align*}
+& \langle r_1, x_1, r'_1, x'_1, s_1 \rangle \\
+& \langle r_2, x_2, r'_2, x'_2, s_2 \rangle \\
+& \langle r_3, x_3, r'_3, x'_3, s_3 \rangle \\
+& \cdots \\
+& \langle r_n, x_n, r'_n, x'_n, s_n \rangle
+\end{align*}
+where
+\begin{align*}
+r_k, r'_k & \in \{q_1, q_2, \ldots, q_m, q_s, q_h\}   && k\in\{1,2,\dots, n\}\\
+x_k, x'_k & \in \{0, 1, \square, \vartriangleright\} && k\in\{1,2,\dots, n\}\\
+s_k & \in \{-1, 0, 1\} && k\in\{1,2,\dots, n\}
+\end{align*}
+We can assign a unique number $N$ to each possible program by
+\[
+N = \prod_{k=1}^n p_k^{w_k}
+\]
+where
+\begin{align*}
+p_k & = k\text{th prime number}\\
+w_k & = 2^{a_k} \times 3^{b_k} \times 5^{c_k} \times 7^{d_k} \times 11^{e_k} \\
+a_k & = \begin{cases}i & \text{if }r_k = q_i, i\in\{1,2,\dots,m\}\\m+1 & \text{if }r_k = q_s\\m+2 & \text{if }r_k = q_h\end{cases}\\
+b_k & = \begin{cases}1 & \text{if }x_k = 0\\2 & \text{if }x_k = 1\\3 & \text{if }x_k = \square\\4 & \text{if }x_k = \vartriangleright\end{cases}\\
+c_k & = \begin{cases}i & \text{if }r'_k = q_i\\m+1 & \text{if }r'_k = q_s\\m+2 & \text{if }r'_k = q_h\end{cases}\\
+d_k & = \begin{cases}1 & \text{if }x'_k = 0\\2 & \text{if }x'_k = 1\\3 & \text{if }x'_k = \square\\4 & \text{if }x'_k = \vartriangleright\end{cases}\\
+e_k & = \begin{cases}1 & \text{if }s_k = -1\\2 & \text{if }s_k = 0\\3 & \text{if }s_k = 1\end{cases}
+\end{align*}
+
+
+% \printbibliography
+% \addcontentsline{toc}{section}{References}
+
+\end{document}
