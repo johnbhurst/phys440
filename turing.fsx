@@ -38,9 +38,6 @@ let iterate (machine:Machine) =
                 |> Seq.map (fun machine -> (machine, machine))
                 |> Seq.tryHead
 
-// List.unfold iterate { State = "qs"; Tape = tape; Position = 0 }
-//             |> List.iter (fun machine -> printfn "%A" machine.Tape)
 List.unfold iterate { State = "qs"; Tape = tape; Position = 0 }
             |> List.map (fun machine -> machine.Tape)
             |> List.iter (printfn "%A")
-            // |> List.iter (fun machine -> printfn "%A" machine.Tape)
