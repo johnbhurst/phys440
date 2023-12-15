@@ -3,6 +3,26 @@
 // John Hurst (john.b.hurst@gmail.com)
 // 2023-12-16
 
+// Simple Turing Machine simulator.
+// Usage: turing.fsx <program> <tape>
+// <program> is a file containing the rules for the machine. Each rule is a line containing 5 space-separated fields:
+//   <state> <symbol> <new-state> <new-symbol> <direction>
+// <tape> is a list of symbols separated by spaces.
+// An example program is:
+// qs start q1 start +1
+// q1 0 q1 blank +1
+// q1 1 q1 blank +1
+// q1 blank q2 blank -1
+// q2 blank q2 blank -1
+// q2 start q3 start +1
+// q3 blank qh 1 0
+//
+// 'qs' is the initial state.
+// 'qh' is the halt state.
+// 'start' is the initial symbol on the tape.
+// Following the 'start' symbol on the tape is the input, as an arbitrary number of 0s and 1s.
+// This program erases the input and prints a single "1" on the tape as the output.
+
 type Rule = { State: string; Symbol: string; NewState: string; NewSymbol: string; Direction: int }
 
 type Machine = { State: string; Tape: string list; Position: int }
