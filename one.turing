@@ -1,0 +1,7 @@
+qs start q1 start +1
+q1 0 q1 blank +1
+q1 1 q1 blank +1
+q1 blank q2 blank -1
+q2 blank q2 blank -1
+q2 start q3 start +1
+q3 blank qh 1 0
