@@ -27,6 +27,7 @@ type Rule = { State: string; Symbol: string; NewState: string; NewSymbol: string
 
 type Machine = { State: string; Tape: string list; Position: int }
 
+// Parse a rule from an input line of text.
 let parseRule (line:string) =
   let parts = line.Split(' ')
   { State = parts.[0];
@@ -35,9 +36,11 @@ let parseRule (line:string) =
     NewSymbol = parts.[3];
     Direction = int parts.[4] }
 
+// Predicate to determine if a rule matches the current machine state.
 let matchRule (machine:Machine) (rule:Rule) =
     machine.State = rule.State && machine.Tape.[machine.Position] = rule.Symbol
 
+// Update the machine according to the rule.
 let applyRule (machine:Machine) (rule:Rule) =
     let newTape = List.updateAt machine.Position rule.NewSymbol machine.Tape
     let newPosition = machine.Position + rule.Direction
@@ -45,11 +48,14 @@ let applyRule (machine:Machine) (rule:Rule) =
       Tape = if newPosition >= newTape.Length then newTape @ ["blank"] else newTape;
       Position = newPosition }
 
+// Read the first command line arg as a file containing the list of rules making up the program.
 let program = System.IO.File.ReadLines(fsi.CommandLineArgs.[1])
             |> Seq.map parseRule
 
+// Read the remaining command line args as the tape input.
 let tape = "start" :: List.skip 2 (List.ofSeq fsi.CommandLineArgs)
 
+// Iterate the machine until it halts.
 let iterate (machine:Machine) =
     if machine.State = "qh" then None
     else
@@ -58,6 +64,7 @@ let iterate (machine:Machine) =
                 |> Seq.map (fun machine -> (machine, machine))
                 |> Seq.tryHead
 
+// Run the machine and print the tape at each step.
 List.unfold iterate { State = "qs"; Tape = tape; Position = 0 }
             |> List.map (fun machine -> machine.Tape)
             |> List.iter (printfn "%A")
