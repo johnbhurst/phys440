@@ -33,10 +33,14 @@ let tape = "start" :: List.skip 2 (List.ofSeq fsi.CommandLineArgs)
 let iterate (machine:Machine) =
     if machine.State = "qh" then None
     else
-        Seq.filter (matchRule machine) program |> Seq.map (applyRule machine) |> Seq.map (fun machine -> (machine, machine)) |> Seq.tryHead
+        program |> Seq.filter (matchRule machine)
+                |> Seq.map (applyRule machine)
+                |> Seq.map (fun machine -> (machine, machine))
+                |> Seq.tryHead
 
-let machine = { State = "qs"; Tape = tape; Position = 0 }
-
-let steps = List.unfold iterate machine
-
-steps |> List.iter (fun machine -> printfn "%A" machine.Tape)
+// List.unfold iterate { State = "qs"; Tape = tape; Position = 0 }
+//             |> List.iter (fun machine -> printfn "%A" machine.Tape)
+List.unfold iterate { State = "qs"; Tape = tape; Position = 0 }
+            |> List.map (fun machine -> machine.Tape)
+            |> List.iter (printfn "%A")
+            // |> List.iter (fun machine -> printfn "%A" machine.Tape)
