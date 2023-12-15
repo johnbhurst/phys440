@@ -21,7 +21,7 @@ If a process in Nature is continuous, then it cannot be computed by a Turing mac
 (It may be possible to approximate the process to arbitrary accuracy, using rational numbers.)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\question{3.2}{(Turing numbers) That that single-tape Turing machines can each be given a number from the list 1, 2, 3, ... in such a way that the number uniquely specifies the corresponding machine.
+\question{3.2}{(Turing numbers) Show that single-tape Turing machines can each be given a number from the list 1, 2, 3, ... in such a way that the number uniquely specifies the corresponding machine.
 We call this number the \textit{Turing number} of the corresponding machine.
 }
 
@@ -55,6 +55,53 @@ b_k & = \begin{cases}1 & \text{if }x_k = 0\\2 & \text{if }x_k = 1\\3 & \text{if 
 c_k & = \begin{cases}i & \text{if }r'_k = q_i\\m+1 & \text{if }r'_k = q_s\\m+2 & \text{if }r'_k = q_h\end{cases}\\
 d_k & = \begin{cases}1 & \text{if }x'_k = 0\\2 & \text{if }x'_k = 1\\3 & \text{if }x'_k = \square\\4 & \text{if }x'_k = \vartriangleright\end{cases}\\
 e_k & = \begin{cases}1 & \text{if }s_k = -1\\2 & \text{if }s_k = 0\\3 & \text{if }s_k = 1\end{cases}
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.3}{(Turing machine to reverse a bit string) Describe a Turing machine which takes a binary number $x$ as its input, and outputs the bits of $x$ in reverse order.
+}
+
+The hint suggests to use a multi-tape Turing machine and additional symbols.
+We can do it reasonably with a single tape, with some extra symbols \texttt{X} and \texttt{Y}.
+
+We'll describe a Turing machine that does these steps:
+\begin{enumerate}
+    \item Setup.
+    \item Loop over bits in input: remove the first bit from the input and prepend it to the output.
+    \item Shift the output left to the beginning of the tape.
+\end{enumerate}
+
+Given the input $11000$, the machine will progress like this:
+
+\[
+\begin{array}{c c c c c c c c c c c c c c c c l}
+\vartriangleright & 1 & 1 & 0 & 0 & 0 & \square & \cdots & & & & & & & & & \expl{Start}\\
+\vartriangleright & 1 & 1 & 0 & 0 & 0 & \texttt{X} & \texttt{Y} & \texttt{Z} & \square & \cdots & & & & & & \expl{Setup}\\
+\vartriangleright & \square & 1 & 0 & 0 & 0 & \texttt{X} & \texttt{Y} & 1 & \texttt{Z} & \square & \cdots & & & & & \expl{Moved first digit}\\
+\vartriangleright & \square & \square & 0 & 0 & 0 & \texttt{X} & \texttt{Y} & 1 & 1 & \texttt{Z} & \square & \cdots & & & & \expl{Moved second digit}\\
+\vartriangleright & \square & \square & \square & 0 & 0 & \texttt{X} & \texttt{Y} & 0 & 1 & 1 & \texttt{Z} & \square & \cdots & & & \expl{Moved third digit}\\
+\vartriangleright & \square & \square & \square & \square & 0 & \texttt{X} & \texttt{Y} & 0 & 0 & 1 & 1 & \texttt{Z} & \square & \cdots & & \expl{Moved fourth digit}\\
+\vartriangleright & \square & \square & \square & \square & \square & \texttt{X} & \texttt{Y} & 0 & 0 & 0 & 1 & 1 & \texttt{Z} & \square & \cdots & \expl{Moved fifth digit}\\
+\vartriangleright & 0 & 0 & 0 & 1 & 1 & \square & \cdots & & & & & & & & & \expl{Shifted output}\\
+\end{array}
+\]
+
+The setup part of the program is:
+\begin{align*}
+\langle q_s, \vartriangleright, q_1, \vartriangleright, 1 \rangle &&& \expl{Start: move right}\\
+\langle q_1, 0, q_1, 0, 1 \rangle &&& \expl{Skip over 0s moving right}\\
+\langle q_1, 1, q_1, 1, 1 \rangle &&& \expl{Skip over 1s moving right}\\
+\langle q_1, \square, q_2, \texttt{X}, 1\rangle &&& \expl{Append \texttt{X} on right} \\
+\langle q_2, \square, q_3, \texttt{Y}, -1 \rangle &&& \expl{Append \texttt{Y} on right and head back}\\
+\langle q_3, \texttt{X}, q_3, \texttt{X}, -1 \rangle &&& \expl{Skip \texttt{X} moving left}\\
+\langle q_3, 0, q_3, 0, -1 \rangle &&& \expl{Skip 0s moving left}\\
+\langle q_3, 1, q_3, 1, -1 \rangle &&& \expl{Skip 1s moving left}\\
+\langle q_3, \vartriangleright, q_4, \vartriangleright, 1 \rangle &&& \expl{At beginning, ready to move bits}\\
+\end{align*}
+
+The moving bits part is this:
+\begin{align*}
+\langle q_4, 0, q_5, \square, 1 \rangle &&& \expl{Moving 0}\\
 \end{align*}
 
 
