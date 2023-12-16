@@ -50,6 +50,8 @@ let applyRule (machine:Machine) (rule:Rule) =
 
 // Read the first command line arg as a file containing the list of rules making up the program.
 let program = System.IO.File.ReadLines(fsi.CommandLineArgs.[1])
+            |> Seq.filter (fun (line:string) -> not(line = ""))
+            |> Seq.filter (fun (line:string) -> not(line.StartsWith("#")))
             |> Seq.map parseRule
 
 // Read the remaining command line args as the tape input.
