@@ -88,15 +88,15 @@ Given the input $11000$, the machine will progress like this:
 
 The setup part of the program is:
 \begin{align*}
-\langle q_s, \vartriangleright, q_1, \vartriangleright, 1 \rangle &&& \expl{Start: move right}\\
-\langle q_1, 0, q_1, 0, 1 \rangle &&& \expl{Skip over 0s moving right}\\
-\langle q_1, 1, q_1, 1, 1 \rangle &&& \expl{Skip over 1s moving right}\\
-\langle q_1, \square, q_2, \texttt{X}, 1\rangle &&& \expl{Append \texttt{X} on right} \\
+\langle q_s, \vartriangleright, q_1, \vartriangleright, +1 \rangle &&& \expl{Start: move right}\\
+\langle q_1, 0, q_1, 0, +1 \rangle &&& \expl{Skip over 0s moving right}\\
+\langle q_1, 1, q_1, 1, +1 \rangle &&& \expl{Skip over 1s moving right}\\
+\langle q_1, \square, q_2, \texttt{X}, +1\rangle &&& \expl{Append \texttt{X} on right} \\
 \langle q_2, \square, q_3, \texttt{Y}, -1 \rangle &&& \expl{Append \texttt{Y} on right and head back}\\
 \langle q_3, \texttt{X}, q_3, \texttt{X}, -1 \rangle &&& \expl{Skip \texttt{X} moving left}\\
 \langle q_3, 0, q_3, 0, -1 \rangle &&& \expl{Skip 0s moving left}\\
 \langle q_3, 1, q_3, 1, -1 \rangle &&& \expl{Skip 1s moving left}\\
-\langle q_3, \vartriangleright, q_4, \vartriangleright, 1 \rangle &&& \expl{At beginning, ready to move bits}\\
+\langle q_3, \vartriangleright, q_4, \vartriangleright, +1 \rangle &&& \expl{At beginning, ready to move bits}\\
 \end{align*}
 
 The moving bits part is this:
