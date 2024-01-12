@@ -1,35 +1,81 @@
 # John Hurst
-# 2023-12-16
+# 204-01-13
 
-# Setup: append X Y Z markers at end of tape; return to start.
-qs start q1 start +1
-q1 0 q1 0 +1
-q1 1 q1 1 +1
-q1 blank q2 X +1
-q2 blank q3 Y +1
-q3 blank q4 Z -1
-q4 Y q4 Y -1
-q4 X q4 X -1
-q4 0 q4 0 -1
-q4 1 q4 1 -1
-q4 start q5 start +1
+# This is a Turing machine definition to reverse an input string of '0's and '1's.
+# The Turing machine is specified as a set of tuples (state1 symbol1 state2 symbol2 movement).
+# where:
+# - state1 is the current state
+# - symbol1 is the symbol at the currrent tape position
+# - state2 is the new state
+# - symbol2 is the new syombol to be written at the current tape position
+# - movement is -1, 0 or +1 to specify the tape position movement
 
-# look for 0 or 1 to move to position of Y: a6 is move 0, q7 is move 1.
-q5 blank q5 blank +1
-q5 X qh X 0
-q5 0 q6 blank +1
-q6 0 q6 0 +1
-q6 1 q6 1 +1
-q6 X q6 X +1
-q6 Y q8 0 +1
-q5 1 q7 blank +1
-q7 0 q7 0 +1
-q7 1 q7 1 +1
-q7 X q7 X +1
-q7 Y q8 1 +1
+# Example:
+# ./turing.fsx reverse.turing 1 1 0 0 0 1
+# results in:
+# 1 0 0 0 1 1
 
-# move to end to shift symbols from X to end rightward by one.
-q8 0 q8 0 +1
-q8 1 q8 1 +1
-q8 Z q9 blank +1
-q9 blank qh Z -1
+# States:
+# ax: initialise: append separator 'X' to end of input
+# az: append terminator 'Z' to end of tape
+# bx: reverse from 'Z' to 'X'
+# bi: reverse from 'X' to end of input
+# m0: move '0' from input to end of output
+# m1: move '1' from input to end of output
+# rx: remove separator 'X'
+# so: shift output
+# s0: shift '0' digit
+# p0: put shifted '0' digit
+# s1: shift '1' digit
+# p1: put shifted '1' digit
+
+# Step 1: Append separator X and terminator Z
+qs start ax start +1
+ax 0 ax 0 +1
+ax 1 ax 1 +1
+ax blank az X +1
+az 0 az 0 +1
+az 1 az 1 +1
+az blank bx Z -1
+bx 0 bx 0 -1
+bx 1 bx 1 -1
+bx X bi X -1
+bi blank bi blank -1
+
+# Step 2: Remove digit from end of input and append to output.
+# Step 3: Repeat until no more input.
+bi 0 m0 blank +1
+m0 blank m0 blank +1
+m0 X m0 X +1
+m0 0 m0 0 +1
+m0 1 m0 1 +1
+m0 Z az 0 +1
+bi 1 m1 blank +1
+m1 blank m1 blank +1
+m1 X m1 X +1
+m1 0 m1 0 +1
+m1 1 m1 1 +1
+m1 Z az 1 +1
+
+# Step 4: Remove delimiter.
+bi start rx start +1
+rx blank rx blank +1
+rx X so blank +1
+
+# Step 5: Move output to beginning of tape.
+so blank so blank +1
+so 0 s0 blank -1
+s0 blank s0 blank -1
+s0 start p0 start +1
+s0 0 p0 0 +1
+s0 1 p0 1 +1
+p0 blank so 0 +1
+so 1 s1 blank -1
+s1 blank s1 blank -1
+s1 start p1 start +1
+s1 0 p1 0 +1
+s1 1 p1 1 +1
+p1 blank so 1 +1
+
+# Step 6: Remove terminator.
+so Z qh blank 0
