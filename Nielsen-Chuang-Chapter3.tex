@@ -62,48 +62,117 @@ e_k & = \begin{cases}1 & \text{if }s_k = -1\\2 & \text{if }s_k = 0\\3 & \text{if
 }
 
 The hint suggests to use a multi-tape Turing machine and additional symbols.
-We can do it reasonably with a single tape, with some extra symbols \texttt{X} and \texttt{Y}.
+We can do it reasonably with a single tape, with some extra symbols \texttt{X} and \texttt{Z}.
 
 We'll describe a Turing machine that does these steps:
 \begin{enumerate}
-    \item Setup.
-    \item Loop over bits in input: remove the first bit from the input and prepend it to the output.
-    \item Shift the output left to the beginning of the tape.
+    \item Append separator \texttt{X} and terminator \texttt{Z}.
+    \item Remove digit from end of input and append to output.
+    \item Repeat until no more input.
+    \item Remove separator \texttt{X}.
+    \item Shift output to beginning of tape.
+    \item Remove terminator.
 \end{enumerate}
 
-Given the input $11000$, the machine will progress like this:
+We will use these states:
+\begin{itemize}
+    \item \texttt{ax}: Initialise: append separator 'X' to end of input
+    \item \texttt{az}: Append terminator 'Z' to end of tape
+    \item \texttt{bx}: Reverse from 'Z' to 'X'
+    \item \texttt{bi}: Reverse from 'X' to end of input
+    \item \texttt{m0}: Move '0' from input to end of output
+    \item \texttt{m1}: Move '1' from input to end of output
+    \item \texttt{rx}: Remove separator 'X'
+    \item \texttt{so}: Shift output
+    \item \texttt{s0}: Shift '0' digit
+    \item \texttt{p0}: Put shifted '0' digit
+    \item \texttt{s1}: Shift '1' digit
+    \item \texttt{p1}: Put shifted '1' digit
+\end{itemize}
 
+Step 1: Append separator \texttt{X} and terminator \texttt{Z}:
+
+\begin{align*}
+\langle qs, start, ax, start, +1 \rangle \\
+\langle ax, 0, ax, 0, +1 \rangle \\
+\langle ax, 1, ax, 1, +1 \rangle \\
+\langle ax, blank, az, X, +1 \rangle \\
+\langle az, 0, az, 0, +1 \rangle \\
+\langle az, 1, az, 1, +1 \rangle \\
+\langle az, blank, bx, Z, -1 \rangle \\
+\langle bx, 0, bx, 0, -1 \rangle \\
+\langle bx, 1, bx, 1, -1 \rangle \\
+\langle bx, X, bi, X, -1 \rangle \\
+\langle bi, blank, bi, blank, -1 \rangle
+\end{align*}
+
+Step 2: Remove digit from end of input and append to output.
+Step 3: Repeat until no more input.
+\begin{align*}
+\langle bi, 0, m0, blank, +1 \rangle \\
+\langle m0, blank, m0, blank, +1 \rangle \\
+\langle m0, X, m0, X, +1 \rangle \\
+\langle m0, 0, m0, 0, +1 \rangle \\
+\langle m0, 1, m0, 1, +1 \rangle \\
+\langle m0, Z, az, 0, +1 \rangle \\
+\langle bi, 1, m1, blank, +1 \rangle \\
+\langle m1, blank, m1, blank, +1 \rangle \\
+\langle m1, X, m1, X, +1 \rangle \\
+\langle m1, 0, m1, 0, +1 \rangle \\
+\langle m1, 1, m1, 1, +1 \rangle \\
+\langle m1, Z, az, 1, +1 \rangle
+\end{align*}
+
+Step 4: Remove separator 'X'.
+\begin{align*}
+\langle bi, start, rx, start, +1 \rangle \\
+\langle rx, blank, rx, blank, +1 \rangle \\
+\langle rx, X, so, blank, +1 \rangle
+\end{align*}
+
+Step 5: Shift output to beginning of tape.
+\begin{align*}
+\langle so, blank, so, blank, +1 \rangle \\
+\langle so, 0, s0, blank, -1 \rangle \\
+\langle s0, blank, s0, blank, -1 \rangle \\
+\langle s0, start, p0, start, +1 \rangle \\
+\langle s0, 0, p0, 0, +1 \rangle \\
+\langle s0, 1, p0, 1, +1 \rangle \\
+\langle p0, blank, so, 0, +1 \rangle \\
+\langle so, 1, s1, blank, -1 \rangle \\
+\langle s1, blank, s1, blank, -1 \rangle \\
+\langle s1, start, p1, start, +1 \rangle \\
+\langle s1, 0, p1, 0, +1 \rangle \\
+\langle s1, 1, p1, 1, +1 \rangle \\
+\langle p1, blank, so, 1, +1 \rangle
+\end{align*}
+
+Step 6: Remove terminator.
+\begin{align*}
+\langle so, Z, qh, blank, 0 \rangle
+\end{align*}
+
+Given the input $11000$, the machine will progress like this:
 \[
-\begin{array}{c c c c c c c c c c c c c c c c l}
-\vartriangleright & 1 & 1 & 0 & 0 & 0 & \square & \cdots & & & & & & & & & \expl{Start}\\
-\vartriangleright & 1 & 1 & 0 & 0 & 0 & \texttt{X} & \texttt{Y} & \texttt{Z} & \square & \cdots & & & & & & \expl{Setup}\\
-\vartriangleright & \square & 1 & 0 & 0 & 0 & \texttt{X} & \texttt{Y} & 1 & \texttt{Z} & \square & \cdots & & & & & \expl{Moved first digit}\\
-\vartriangleright & \square & \square & 0 & 0 & 0 & \texttt{X} & \texttt{Y} & 1 & 1 & \texttt{Z} & \square & \cdots & & & & \expl{Moved second digit}\\
-\vartriangleright & \square & \square & \square & 0 & 0 & \texttt{X} & \texttt{Y} & 0 & 1 & 1 & \texttt{Z} & \square & \cdots & & & \expl{Moved third digit}\\
-\vartriangleright & \square & \square & \square & \square & 0 & \texttt{X} & \texttt{Y} & 0 & 0 & 1 & 1 & \texttt{Z} & \square & \cdots & & \expl{Moved fourth digit}\\
-\vartriangleright & \square & \square & \square & \square & \square & \texttt{X} & \texttt{Y} & 0 & 0 & 0 & 1 & 1 & \texttt{Z} & \square & \cdots & \expl{Moved fifth digit}\\
-\vartriangleright & 0 & 0 & 0 & 1 & 1 & \square & \cdots & & & & & & & & & \expl{Shifted output}\\
+\begin{array}{c c c c c c c c c c c c c l}
+\vartriangleright & 1 & 1 & 0 & 0 & 0 \\
+\vartriangleright & 1 & 1 & 0 & 0 & 0 & \texttt{X} \\
+\vartriangleright & 1 & 1 & 0 & 0 & 0 & \texttt{X} & \texttt{Z} \\
+\vartriangleright & 1 & 1 & 0 & 0 & \square  & \texttt{X} & 0 & \texttt{Z} \\
+\vartriangleright & 1 & 1 & 0 & \square  & \square  & \texttt{X} & 0 & 0 & \texttt{Z} \\
+\vartriangleright & 1 & 1 & \square  & \square  & \square  & \texttt{X} & 0 & 0 & 0 & \texttt{Z} \\
+\vartriangleright & 1 & \square  & \square  & \square  & \square  & \texttt{X} & 0 & 0 & 0 & 1 & \texttt{Z} \\
+\vartriangleright & \square  & \square  & \square  & \square  & \square  & \texttt{X} & 0 & 0 & 0 & 1 & 1 & \texttt{Z} \\
+\vartriangleright & \square  & \square  & \square  & \square  & \square  & \square  & 0 & 0 & 0 & 1 & 1 & \texttt{Z} \\
+\vartriangleright & 0 & \square  & \square  & \square  & \square  & \square  & \square  & 0 & 0 & 1 & 1 & \texttt{Z} \\
+\vartriangleright & 0 & 0 & \square  & \square  & \square  & \square  & \square  & \square  & 0 & 1 & 1 & \texttt{Z} \\
+\vartriangleright & 0 & 0 & \square  & \square  & \square  & \square  & \square  & \square  & \square  & 1 & 1 & \texttt{Z} \\
+\vartriangleright & 0 & 0 & 0 & \square  & \square  & \square  & \square  & \square  & \square  & \square  & 1 & \texttt{Z} \\
+\vartriangleright & 0 & 0 & 0 & 1 & \square  & \square  & \square  & \square  & \square  & \square  & \square  & \texttt{Z} \\
+\vartriangleright & 0 & 0 & 0 & 1 & 1 & \square  & \square  & \square  & \square  & \square  & \square  & \texttt{Z} \\
+\vartriangleright & 0 & 0 & 0 & 1 & 1 \\
 \end{array}
 \]
-
-The setup part of the program is:
-\begin{align*}
-\langle q_s, \vartriangleright, q_1, \vartriangleright, +1 \rangle &&& \expl{Start: move right}\\
-\langle q_1, 0, q_1, 0, +1 \rangle &&& \expl{Skip over 0s moving right}\\
-\langle q_1, 1, q_1, 1, +1 \rangle &&& \expl{Skip over 1s moving right}\\
-\langle q_1, \square, q_2, \texttt{X}, +1\rangle &&& \expl{Append \texttt{X} on right} \\
-\langle q_2, \square, q_3, \texttt{Y}, -1 \rangle &&& \expl{Append \texttt{Y} on right and head back}\\
-\langle q_3, \texttt{X}, q_3, \texttt{X}, -1 \rangle &&& \expl{Skip \texttt{X} moving left}\\
-\langle q_3, 0, q_3, 0, -1 \rangle &&& \expl{Skip 0s moving left}\\
-\langle q_3, 1, q_3, 1, -1 \rangle &&& \expl{Skip 1s moving left}\\
-\langle q_3, \vartriangleright, q_4, \vartriangleright, +1 \rangle &&& \expl{At beginning, ready to move bits}\\
-\end{align*}
-
-The moving bits part is this:
-\begin{align*}
-\langle q_4, 0, q_5, \square, 1 \rangle &&& \expl{Moving 0}\\
-\end{align*}
-
 
 % \printbibliography
 % \addcontentsline{toc}{section}{References}

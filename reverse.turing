@@ -29,7 +29,7 @@
 # s1: shift '1' digit
 # p1: put shifted '1' digit
 
-# Step 1: Append separator X and terminator Z
+# Step 1: Append separator 'X' and terminator 'Z'.
 qs start ax start +1
 ax 0 ax 0 +1
 ax 1 ax 1 +1
@@ -57,12 +57,12 @@ m1 0 m1 0 +1
 m1 1 m1 1 +1
 m1 Z az 1 +1
 
-# Step 4: Remove delimiter.
+# Step 4: Remove separator 'X'.
 bi start rx start +1
 rx blank rx blank +1
 rx X so blank +1
 
-# Step 5: Move output to beginning of tape.
+# Step 5: Shift output to beginning of tape.
 so blank so blank +1
 so 0 s0 blank -1
 s0 blank s0 blank -1
