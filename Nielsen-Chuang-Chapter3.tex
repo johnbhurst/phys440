@@ -175,7 +175,7 @@ Given the input $11000$, the machine will progress like this:
 \]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\question{3.6}{(Universality of \boolnand) Show that the \boolnand gate can be used to simulate the \booland, \boolxor and \boolnot gates,
+\question{3.8}{(Universality of \boolnand) Show that the \boolnand gate can be used to simulate the \booland, \boolxor and \boolnot gates,
 provided wires, ancilla bits and \boolfanout are available.
 }
 
@@ -210,6 +210,103 @@ Finally, \boolxor can be defined from \booland and \boolor:
 (x \booland \boolnot y) \boolor (\boolnot x \booland y) & = (x \booland y) \boolor (\boolnot x \booland \boolnot y) \\
 & = x \boolxor y
 \end{align*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.9}{Prove that $f(n)$ is $O(g(n))$ if and only if $g(n)$ is $\Omega(f(n))$.
+Deduce that $f(n)$ is $\Theta(g(n))$ if and only if $g(n)$ is $\Theta(f(n))$.
+}
+
+Suppose $f(n)$ is $O(g(n))$.
+Then there exist constants $c$ and $n_0$ such that $f(n) \le c g(n)$ for all $n \ge n_0$.
+Then $g(n) \ge \frac{1}{c} f(n)$ for all $n \ge n_0$, so $g(n)$ is $\Omega(f(n))$.
+
+Similarly, if $g(n)$ is $\Omega(f(n))$, then there exist constants $c$ and $n_0$ such that $g(n) \ge c f(n)$ for all $n \ge n_0$.
+Then $f(n) \le \frac{1}{c} g(n)$ for all $n \ge n_0$, so $f(n)$ is $O(g(n))$.
+
+If $f(n)$ is $\Theta(g(n))$, then $f(n)$ is $O(g(n))$ and $\Omega(g(n))$.
+Then
+\begin{align*}
+f(n) \text{ is } O(n) & \implies g(n) \text{ is } \Omega(f(n)) \\
+f(n) \text{ is } \Omega(n) & \implies g(n) \text{ is } O(f(n))
+\end{align*}
+And so $g(n)$ is $\Theta(f(n))$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.10}{Suppose $g(n)$ is a polynomial of degree $k$.
+Show that $g(n)$ is $O(n^l)$ for any $l \ge k$.
+}
+
+Let $g(n) = \sum_{j=0}^k a_j n^j$, and then choose $c=k\times \max\{|a_0|, |a_1|, \ldots, |a_k|\}$.
+Then
+\begin{align*}
+g(n) & = \sum_{j=0}^k a_j n^j \\
+& \le \sum_{j=0}^k \max\{|a_i|\} n^l \\
+& = cn^l
+\end{align*}
+Therefore $g(n)$ is $O(n^l)$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.11}{Show that $\log n$ is $O(n^k)$ for any $k > 0$.
+}
+
+Consider $\lim_{n\to\infty} \frac{n^k}{\log n}$:
+
+\begin{align*}
+\lim_{n\to\infty} \frac{n^k}{\log n} & = \lim_{n\to\infty} \frac{k n^{k-1}}{\frac{1}{n}} && \expl{L'H\^opital's rule}\\
+& = \lim_{n\to\infty} k n^k \\
+& = \infty
+\end{align*}
+
+Therefore $\log n$ is $O(n^k)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.12}{($n^{\log n}$ is  super-polynomial) Show that $n^k$ is $O(n^{\log n})$ for any $k$,
+but that $n^{\log n}$ is never $O(n^k)$.
+}
+
+For the first part, take $n_0=\ceil{e^k}$. Then $\log{n_0}\ge k$, and for $n>n_0$:
+\begin{align*}
+\log{n} & > k \\
+n^{\log{n}} & > n^k
+\end{align*}
+Therefore $n^k$ is $O(n^{\log n})$.
+
+For the second part, suppose $n^{\log n}$ is $O(n^k)$.
+Then there exist constants $c$ and $n_0$ such that:
+\begin{align*}
+n^{\log n} & \le c n^k && \text{for all } n > n_0 \\
+\end{align*}
+Take $n_1 = \max\{\ceil{e^{k+1}},\ceil{c}\}$. Then:
+\begin{align*}
+n^{\log{n}} & > n^{\log{n_1}} && \text{for all } n > n_1 \\
+& \ge n^{k+1} \\
+& \ge c n^k \\
+\end{align*}
+which contradicts the assumption that $n^{\log n}$ is $O(n^k)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.13}{($n^{\log n}$ is sub-exponential) Show that $k^n$ is $\Omega(n^{\log n})$ for any $k > 1$,
+but that $n^{\log n}$ is never $\Omega(k^n)$.
+}
+
+\todo{Question 3.13.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.14}{Suppose $e(n)$ is $O(f(n))$ and $g(n)$ is $O(h(n))$.
+Show that $e(n)g(n)$ is $O(f(n)h(n))$.
+}
+
+Because $e(n)$ is $O(f(n))$, there exist constants $c_1$ and $n_1$ such that $e(n) \le c_1 f(n)$ for all $n > n_1$.
+Similarly, there exist constants $c_2$ and $n_2$ such that $g(n) \le c_2 h(n)$ for all $n > n_2$.
+Let $c = c_1 c_2$ and $n_0 = \max\{n_1, n_2\}$.
+Then for $n > n_0$:
+\begin{align*}
+e(n)g(n) & \le c_1 c_2 f(n) h(n) \\
+& = c f(n) h(n)
+\end{align*}
+Therefore $e(n)g(n)$ is $O(f(n)h(n))$.
 
 
 % \printbibliography
