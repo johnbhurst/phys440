@@ -308,6 +308,32 @@ e(n)g(n) & \le c_1 c_2 f(n) h(n) \\
 \end{align*}
 Therefore $e(n)g(n)$ is $O(f(n)h(n))$.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3.15}{(Lower bound for compare-and-swap based sorts) Suppose an $n$ element list is sorted by applying some sequence of compare-and-swap operations to the list.
+There are $n!$ possible initial orderings of the list.
+Show that after $k$ of the compare-and-swap operations have been applied,  at most $2^k$ of the possible initial orderings will have been sorted into the correct order.
+Conclude that $\Omega(n\log n)$ compare-and-swap operations are required to sort all possible initial orderings into the correct order.
+}
+
+For a single compare-and-swap operations, there are two possible outcomes: either the elements are swapped, or they are not.
+For $k$ compare-and-swap operations, there are $2^k$ possible outcomes.
+Therefore, after $k$ compare-and-swap operations, at most $2^k$ of the possible initial orderings will have been sorted into the correct order.
+
+For a list of $n$ elements, with $n!$ possible initial orderings, we need at least $m$ compare-and-swap operations, where $m$ is the smallest integer such that $2^m \ge n!$.
+
+That is:
+\begin{align*}
+2^m & \ge n! \\
+2^m & \ge \sqrt{2\pi n} \left(\frac{n}{e}\right)^n && \expl{Stirling's approximation} \\
+m \log 2 & \ge \log \left[\sqrt{2\pi n} \left(\frac{n}{e}\right)^n\right] && \expl{Taking logarithm} \\
+& = \log \sqrt{2\pi n} + n \log n - n \log e \\
+n \log n & \le m \log 2 - \log \sqrt{2\pi n} + n \log e \\
+\frac{1}{\log 2} n \log n & \le m + n \frac{\log e}{\log 2} \\
+\end{align*}
+
+Apart from the extra $n\frac{log e}{\log 2}$, this matches the definition of $m$ is $\Omega(n\log n)$.
+
+\todo{Can we account for the extra term?}
 
 % \printbibliography
 % \addcontentsline{toc}{section}{References}
