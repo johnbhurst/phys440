@@ -342,7 +342,77 @@ Answer the following questions:
 \item This circuit corresponds to a NOR gate.
 \end{enumerate}
 
-% \printbibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.16}{In some homes in the United States, special switches are used so that two switches control a single light.
+Often, these switches are located at opposite ends of a stairway or a hallway, and either switch can be used to turn the light on or off.
+A traditional switch enables or disables the flow of electricity through a single wire.
+In contrast, these special switches, called \textit{three pole switches}, choose between two different wires.
+The following electrical circuit gives an example:
+\begin{center}
+\begin{circuitikz}
+    \ctikzset{color=blue}
+    \draw
+    (0,0) to [battery] (0,2) --
+    (1,2) node[spdt] (spdtA) {}
+    (4,2) node[spdt,rotate=180] (spdtB) {}
+    (0,2) -- (spdtA.in)
+    (spdtA.out 1) -- (spdtB.out 1)
+    (spdtA.out 2) -- (spdtB.out 2)
+    (spdtB.in) -- (5,2)
+    (5,2) to [lamp, l=Output] (5,0)
+    -- (0,0)
+    (spdtA.in) node[below] {C}
+    (spdtA.out 1) node[right] {0}
+    (spdtA.out 2) node[right] {1}
+    (spdtB.out 1) node[left] {1}
+    (spdtB.out 2) node[left] {0}
+    (spdtB.in) node[above] {C};
+    \draw[dashed] (0.25,1.4) rectangle (2.25,2.6);
+    \draw[dashed] (2.75,1.4) rectangle (4.75,2.6);
+    \node[] at (1,2.9) {Switch A};
+    \node[] at (3.5,2.9) {Switch B};
+\end{circuitikz}
+\end{center}
+
+Each switch has three poles, labeled $C$, 0 and 1.
+Switch $A$ is currently flipped up, which connects $C$ and 0.
+Switch $B$ is currently flipped down, which connects $C$ and 1.
+In this configuration, there is a complete path for the electricty to flow.
+It comes out of the positive end of the battery, through Switch $A$ along $A=0$, then down to $B=1$, then through Switch $B$, then down through the light bulb, left through the bottom wire, and up to the negative end of the battery.
+So, the light bulb is on when $A=0$ and $B=1$.
+
+\begin{enumerate}[(a)]
+\item Say $A=0$ and $B=0$. Is the light bulb off or on?
+\item Say $A=1$ and $B=0$. Is the light bulb off or on?
+\item Say $A=1$ and $B=1$. Is the light bulb off or on?
+\item What logic gate does this circuit correspond to?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item When switch $A$ is up (0) and switch $B$ is up (0), the current does not flow, so the light bulb is off.
+\item When switch $A$ is down (1) and switch $B$ is up (0), the current flows through switch $A$ and then switch $B$, so the light bulb is on.
+\item When switch $A$ is down (1) and switch $B$ is down (1), the current does not flow, so the light bulb is off.
+\item This circuit corresponds to an XOR gate.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1.17}{Visit the Wikipedia article ``Transistor count''\cite{wikipedia_transistor_count}.
+\begin{enumerate}[(a)]
+\item Pick an older computer processor. Which one did you pick, what year was it introduced, and how many transistors did it have?
+\item Pick a newer computer processor. Which one did you pick, what year was it introduced, and how many transistors did it have?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item The Zilog Z80 processor was introduced in 1976 and had 8500 transistors.
+\item The 11th gen Intel Core processor was introduced in 2021 and has more than 6 billion transistors.
+\end{enumerate}
+
+
+
+
+\printbibliography
 % \addcontentsline{toc}{section}{References}
 
 \end{document}
