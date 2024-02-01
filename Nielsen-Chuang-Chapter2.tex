@@ -1,0 +1,61 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys440}
+
+\title{PHYS440 - Exercises from Nielsen and Chuang (2016)}
+\author{John Hurst}
+\date{2023/2024}
+
+\begin{document}
+\maketitle
+
+% \tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.1}{(Linear dependence: example) Show that $(1, -1)$, $(1, 2)$ and $(2, 1)$ are linearly dependent.
+}
+
+\[
+(1, -1) + (1, 2) = (2, 1)
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.2}{(Matrix representations: example) Suppose $V$ is a vector space with basis vectors $\ket{0}$ and $\ket{1}$, and $A$ is a linear operator from $V$ to $V$ such that
+$A\ket{0} = \ket{1}$ and $A\ket{1} = \ket{0}$. Find the matrix representation for $A$, with respect to the input basis $\ket{0}, \ket{1}$,
+and the output basis $\ket{0}, \ket{1}$.
+Find input and output bases which give rise to a different matrix representation of $A$.
+}
+
+With respect to the basis $\ket{0}, \ket{1}$, the vector representation of $\ket{0}$ is
+$\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ and the vector representation of $\ket{1}$ is $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$.
+
+Let the matrix $A=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix}$.
+
+Then
+\begin{align*}
+A\ket{0} & = \begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \ket{1} \\
+A\ket{1} & = \begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix} \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \ket{0}
+\end{align*}
+
+\hhline
+
+Now consider the basis $\ket{+} = \istwo(\ket{0} + \ket{1})$ and $\ket{-} = \istwo(\ket{0} - \ket{1})$.
+
+Then $\ket{0} = \istwo(\ket{+} + \ket{-})$ and $\ket{1} = \istwo(\ket{+} - \ket{-})$.
+
+So with respect to the basis $\ket{+}, \ket{-}$, the vector representation of $\ket{0}$ is
+$\begin{pmatrix} \istwo \\ \istwo \end{pmatrix}$ and the vector representation of $\ket{1}$ is $\begin{pmatrix} \istwo \\ -\istwo \end{pmatrix}$.
+
+Let's denote the matrix representation of the operator $A$ with respect to the basis $\ket{+}, \ket{-}$ as $A'$.
+
+Then
+\begin{align*}
+A'\begin{pmatrix}\istwo & \istwo \\ \istwo & -\istwo\end{pmatrix} & = \begin{pmatrix} \istwo & \istwo \\ -\istwo & \istwo \end{pmatrix} \\
+A' & = \begin{pmatrix} \istwo & \istwo \\ -\istwo & \istwo\end{pmatrix} \inv{\begin{pmatrix}\istwo & \istwo \\ \istwo & -\istwo\end{pmatrix}} \\
+& = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}
+\end{align*}
+
+
+% \printbibliography
+% \addcontentsline{toc}{section}{References}
+
+\end{document}
