@@ -410,7 +410,106 @@ So, the light bulb is on when $A=0$ and $B=1$.
 \end{enumerate}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.8}{A qubit is in the state
+\[
+\frac{e^{i\pi/8}}{\sqrt{5}}\ket{0} + \beta\ket{1}.
+\]
+What is a possible value of $\beta$?
+}
+\begin{align*}
+\left|\frac{e^{i\pi/8}}{\sqrt{5}}\right|^2 + |\beta|^2 & = 1 \\
+\frac{1}{5} + |\beta|^2 & = 1 \\
+|\beta|^2 & = \frac{4}{5} \\
+|\beta| & = \frac{2}{\sqrt{5}} \\
+\beta & = \frac{2e^{i\theta}}{\sqrt{5}}
+\end{align*}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.9}{A qubit is in the state
+\[
+A\left(2e^{i\pi/6}\ket{0} - 3\ket{1}\right).
+\]
+\begin{enumerate}[(a)]
+\item Normalize the state (i.e. find $A$).
+\item If you measure the qubit, what is the probability that you get $\ket{0}$?
+\item If you measure the qubit, what is the probability that you get $\ket{1}$?
+\end{enumerate}
+}
+\begin{enumerate}[(a)]
+\item
+\begin{align*}
+\left|2Ae^{i\pi/6}\right|^2 + |3A|^2 & = 1 \\
+4|A|^2 + 9|A|^2 & = 1 \\
+13|A|^2 & = 1 \\
+|A|^2 & = \frac{1}{13} \\
+|A| & = \frac{1}{\sqrt{13}} \\
+A & = \frac{e^{i\theta}}{\sqrt{13}}
+\end{align*}
+\item The probability of measuring $\ket{0}$ is $|2A|^2 = \frac{4}{13}$.
+\item The probability of measuring $\ket{1}$ is $|3A|^2 = \frac{9}{13}$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.10}{A qubit is in the state
+\[
+\frac{1}{2}\ket{0} - \frac{\sqrt(3)}{2}\ket{1}.
+\]
+\begin{enumerate}[(a)]
+\item If you measure it in the $Z$-basis $\{\ket{0},\ket{1}\}$, what states can you get and with what probabilities?
+\item Write the qubit's state in terms of the $X$-basis $\{\ket{+},\ket{-}\}$.
+\item If you measure it in the $X$-basis, what states can you get and with what probabilities?
+\end{enumerate}
+}
+\begin{enumerate}[(a)]
+\item The probability of measuring $\ket{0}$ is $\left|\frac{1}{2}\right|^2 = \frac{1}{4}$.
+The probability of measuring $\ket{1}$ is $\left|-\frac{\sqrt{3}}{2}\right|^2 = \frac{3}{4}$.
+\item The $X$-basis states are $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$ and $\ket{-} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$.
+Thus we have:
+\begin{align*}
+\ket{+} & = \frac{1}{\sqrt{2}}\left(\ket{0}+\ket{1}\right) & \ket{-} & = \frac{1}{\sqrt{2}}\left(\ket{0}-\ket{1}\right) \\
+\ket{+} + \ket{-1} & = \sqrt{2}\ket{0} & \ket{0} & = \frac{1}{\sqrt{2}}\left(\ket{+}+\ket{-}\right) \\
+\ket{+} - \ket{-1} & = \sqrt{2}\ket{1} & \ket{1} & = \frac{1}{\sqrt{2}}\left(\ket{+}-\ket{-}\right)
+\end{align*}
+From these we calculate the qubit's state in the $X$-basis:
+\begin{align*}
+\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2}\ket{1} & = \frac{1}{2}\left(\frac{1}{\sqrt{2}}\left(\ket{+}+\ket{-}\right)\right) - \frac{\sqrt{3}}{2}\left(\frac{1}{\sqrt{2}}\left(\ket{+}-\ket{-}\right)\right) \\
+& = \frac{1}{2\sqrt{2}}\ket{+} + \frac{1}{2\sqrt{2}}\ket{-} - \frac{\sqrt{3}}{2\sqrt{2}}\ket{+} + \frac{\sqrt{3}}{2\sqrt{2}}\ket{-} \\
+& = \frac{1-\sqrt{3}}{2\sqrt{2}}\ket{+} + \frac{1+\sqrt{3}}{2\sqrt{2}}\ket{-}
+\end{align*}
+\item The probability of measuring $\ket{+}$ is $\left|\frac{1-\sqrt{3}}{2\sqrt{2}}\right|^2 = \frac{4-2\sqrt{3}}{8} = \frac{2-\sqrt{3}}{4}$.
+The probability of measuring $\ket{-}$ is $\left|\frac{1+\sqrt{3}}{2\sqrt{2}}\right|^2 = \frac{4+2\sqrt{3}}{8} = \frac{2+\sqrt{3}}{4}$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.11}{The following states are opposite points on the Bloch sphere:
+\begin{align*}
+\ket{a} & = \frac{\sqrt{3}}{2}\ket{0} + \frac{i}{2}\ket{1} \\
+\ket{b} & = \frac{i}{2}\ket{0} + \frac{\sqrt{3}}{2}\ket{1}
+\end{align*}
+So, we can measure relative to them. Now consider a qubit in the state
+\[
+\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2}\ket{1}.
+\]
+\begin{enumerate}[(a)]
+\item Write the qubit's state in terms of $\ket{a}$ and $\ket{b}$.
+\item If you measure the qubit in the basis $\{\ket{a},\ket{b}\}$, what states can you get and with what probabilities?
+\end{enumerate}
+}
+\begin{enumerate}[(a)]
+\item We can write the qubit's state in terms of $\ket{a}$ and $\ket{b}$ using these expressions for $\ket{0}$ and $\ket{1}$:
+\begin{align*}
+\ket{0} & = \frac{\sqrt{3}}{2}\ket{a} - \frac{i}{2}\ket{b} & \ket{1} & = -\frac{i}{2}\ket{a} + \frac{\sqrt{3}}{2}\ket{b}
+\end{align*}
+Then:
+\begin{align*}
+\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2}\ket{1} & = \frac{1}{2}\left(\frac{\sqrt{3}}{2}\ket{a} - \frac{i}{2}\ket{b}\right) - \frac{\sqrt{3}}{2}\left(-\frac{i}{2}\ket{a} + \frac{\sqrt{3}}{2}\ket{b}\right) \\
+& = \frac{\sqrt{3}}{4}\ket{a} - \frac{i}{4}\ket{b} + \frac{i\sqrt{3}}{4}\ket{a} - \frac{3}{4}\ket{b} \\
+& = \frac{\sqrt{3}(1+i)}{4}\ket{a} - \frac{3+i}{4}\ket{b} \\
+\end{align*}
+\item The probability of measuring $\ket{a}$ is $\left|\frac{\sqrt{3}(1+i)}{4}\right|^2 = \frac{3\times (1+1)}{16} = \frac{3}{8}$.
+The probability of measuring $\ket{b}$ is $\left|-\frac{3+i}{4}\right|^2 = \frac{1+9}{16} = \frac{5}{8}$.
+\end{enumerate}
 
 \printbibliography
 % \addcontentsline{toc}{section}{References}
