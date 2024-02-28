@@ -511,6 +511,147 @@ Then:
 The probability of measuring $\ket{b}$ is $\left|-\frac{3+i}{4}\right|^2 = \frac{1+9}{16} = \frac{5}{8}$.
 \end{enumerate}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.12}{A qubit is in the state $\ket{0}$.
+If you measure it in the $X$-basis ($\{\ket{+},\ket{-}\}$), and then measure it again in the $Z$-basis ($\{\ket{0},\ket{1}\}$), what is the probability of getting
+\begin{enumerate}[(a)]
+\item $\ket{0}$?
+\item $\ket{1}$?
+\end{enumerate}
+}
+
+After measuring in the $X$-basis, the qubit is in the state $\ket{+}$ or $\ket{-}$.
+From either of these states, a measurement in the $Z$-basis will give
+\begin{enumerate}[(a)]
+\item $P(\ket{0})=\frac{1}{2}$
+\item $P(\ket{1})=\frac{1}{2}$.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.13}{Is there a measurement that can distinguish the following pairs of states?
+If yes, give a measurement.
+If no, explain your reasoning.
+\begin{enumerate}[(a)]
+\item $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$ and $e^{i\pi/8}\ket{+} = \frac{e^{i\pi/8}}{\sqrt{2}}(\ket{0}+\ket{1})$
+\item $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$ and $\ket{-} = \frac{1}{\sqrt{2}}(\ket{0}-\ket{1})$
+\item $\ket{0}$ and $e^{i\pi/4}\ket{0}$
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item These states cannot be distinguished, because they differ only by a global phase.
+\item These states can be distinguished by measuring in the $X$-basis ($\{\ket{+},\ket{-}\}$).
+\item These states cannot be distinguished, because they differ only by a global phase.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.14}{A qubit is in the state
+\[
+\ket{i} = \frac{1}{\sqrt{2}}(\ket{0}+i\ket{1}).
+\]
+\begin{enumerate}[(a)]
+\item Where on the Bloch sphere is this state? Give your answer in $(\theta,\phi)$ coordinates.
+\item Sketch the point on the Bloch sphere.
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item
+\begin{align*}
+\ket{i} & = \frac{1}{\sqrt{2}}\left(\ket{0}+i\ket{1}\right) \\
+& = \cos(\frac{\theta}{2})\ket{0} + e^{i\phi}\sin(\frac{\theta}{2})\ket{1} \\
+\implies \cos(\frac{\theta}{2}) & = \frac{1}{\sqrt{2}} \\
+\frac{\theta}{2} & = \frac{\pi}{4} \\
+\theta & = \frac{\pi}{2} \\
+e^{i\phi} & = i \\
+\phi & = \frac{\pi}{2}
+\end{align*}
+\item
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{Exercise2.14-Bloch.eps}
+\caption{The point on the Bloch sphere.}
+\label{fig:bloch_sphere2.14}
+\end{figure}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.15}{A qubit is in the state
+\[
+\frac{1-i}{2\sqrt{2}}\ket{0} + \frac{\sqrt{3}}{2}\ket{1}.
+\]
+\begin{enumerate}[(a)]
+\item Where on the Bloch sphere is this state? Give your answer in $(\theta,\phi)$ coordinates.
+\item Sketch the point on the Bloch sphere.
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item
+\begin{align*}
+\frac{1-i}{2\sqrt{2}}\ket{0} + \frac{\sqrt{3}}{2}\ket{1} & = \frac{e^{7\pi i/4}}{2}\ket{0} + \frac{\sqrt{3}}{2}\ket{1} \\
+& \equiv \frac{1}{2}\ket{0} + \frac{e^{-7i\pi/4}\sqrt{3}}{2}\ket{1} \\
+\end{align*}
+So:
+\begin{align*}
+\frac{1}{2}\ket{0} + \frac{e^{-7i\pi/4}\sqrt{3}}{2}\ket{1} & = \cos(\frac{\theta}{2})\ket{0} + e^{i\phi}\sin(\frac{\theta}{2})\ket{1} \\
+\implies \cos(\frac{\theta}{2}) & = \frac{1}{2} \\
+\frac{\theta}{2} & = \frac{\pi}{3} \\
+\theta & = \frac{2\pi}{3} \\
+e^{i\phi} & = e^{-7i\pi/4} \\
+& = e^{i\pi/4} \\
+\phi = \frac{\pi}{4}
+\end{align*}
+\item
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{Exercise2.15-Bloch.eps}
+\caption{The point on the Bloch sphere.}
+\label{fig:bloch_sphere2.15}
+\end{figure}
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.16}{Consider the following two states from Exercise 2.11:
+\begin{align*}
+\ket{a} & = \frac{\sqrt{3}}{2}\ket{0} + \frac{i}{2}\ket{1} \\
+\ket{b} & = \frac{i}{2}\ket{0} + \frac{\sqrt{3}}{2}\ket{1}
+\end{align*}
+Prove that these are opposite points of the Bloch sphere by finding their points in spherical coordinates
+$(\theta_a, \phi_a)$ and $(\theta_b, \phi_b)$.
+Verify that $\theta_b = \pi - \theta_a$ and $\phi_b = \phi_a + \pi$,
+which means they lie on opposite points of the Bloch sphere.
+}
+
+\begin{align*}
+\ket{a} & = \frac{\sqrt{3}}{2}\ket{0} + \frac{i}{2}\ket{1} \\
+& = \cos{\frac{\theta_a}{2}}\ket{0} + e^{i\phi_a}\sin{\frac{\theta_a}{2}}\ket{1} \\
+\implies \cos{\frac{\theta_a}{2}} & = \frac{\sqrt{3}}{2} \\
+\frac{\theta_a}{2} & = \frac{\pi}{6} \\
+\theta_a & = \frac{\pi}{3} \\
+e^{i\phi_a} & = i \\
+\phi_a & = \frac{\pi}{2} \\
+\ket{b} & = \frac{i}{2}\ket{0} + \frac{\sqrt{3}}{2}\ket{1} \\
+& = \frac{e^{i\pi/2}}{2}\ket{0} + \frac{\sqrt{3}}{2}\ket{1} \\
+& \equiv \frac{1}{2}\ket{0} + \frac{e^{-i\pi/2}\sqrt{3}}{2}\ket{1} \\
+& = \frac{1}{2}\ket{0} + \frac{e^{3i\pi/2}\sqrt{3}}{2}\ket{1} \\
+& = \cos{\frac{\theta_b}{2}}\ket{0} + e^{i\phi_b}\sin{\frac{\theta_b}{2}}\ket{1} \\
+\implies \cos{\frac{\theta_b}{2}} & = \frac{1}{2} \\
+\frac{\theta_b}{2} & = \frac{\pi}{3} \\
+\theta_b & = \frac{2\pi}{3} \\
+e^{i\phi_b} & = e^{3i\pi/2} \\
+\phi_b & = \frac{3\pi}{2} \\
+\end{align*}
+
+So:
+\begin{align*}
+\theta_b & = \frac{2\pi}{3} = \pi - \frac{\pi}{3} = \pi - \theta_a \\
+\phi_b & = \frac{3\pi}{2} = \frac{\pi}{2} + \pi = \phi_a + \pi
+\end{align*}
+
+\todo{Check answer; apparently something wrong with $\phi_a$, $\phi_b$.}
+
 \printbibliography
 % \addcontentsline{toc}{section}{References}
 
