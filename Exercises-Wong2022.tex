@@ -652,6 +652,42 @@ So:
 
 \todo{Check answer; apparently something wrong with $\phi_a$, $\phi_b$.}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.22}{Consider a map $U$ that transforms the $Z$-basis states as follows:
+\begin{align*}
+U\ket{0} & = \ket{0}+\ket{1}, \\
+U\ket{1} & = \ket{0}-\ket{1}.
+\end{align*}
+Say $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ is a normalized quantum state, i.e. $|\alpha|^2 + |\beta|^2 = 1$.
+\begin{enumerate}[(a)]
+\item Calculate $U\ket{\psi}$.
+\item From your answer to (a), is $U$ a valid quantum gate? Explain your reasoning.
+\end{enumerate}
+}
+\begin{enumerate}[(a)]
+\item $U\ket{\psi} = (\alpha+\beta)\ket{0} + (\alpha-\beta)\ket{1}$.
+\item $U$ is not a valid quantum gate, because it does not preserve the normalization of the state.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.23}{Consider a map $U$ that transforms the $Z$-basis states as follows:
+\begin{align*}
+U\ket{0} & = \frac{\sqrt{3}}{2}\ket{0} + \frac{\sqrt{3}+i}{4}\ket{1}, \\
+U\ket{1} & = \frac{\sqrt{3}+i}{4}\ket{0} - \frac{\sqrt{3}+3i}{4}\ket{1}.
+\end{align*}
+Say $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ is a normalized quantum state, i.e. $|\alpha|^2 + |\beta|^2 = 1$.
+\begin{enumerate}[(a)]
+\item Calculate $U\ket{\psi}$.
+\item From your answer to (a), is $U$ a valid quantum gate? Explain your reasoning.
+\end{enumerate}
+}
+\begin{enumerate}[(a)]
+\item $U\ket{\psi} = \left(\frac{\sqrt{3}}{2}\alpha + \frac{\sqrt{3}+i}{4}\beta\right)\ket{0} + \left(\frac{\sqrt{3}+i}{4}\alpha - \frac{\sqrt{3}+3i}{4}\beta\right)\ket{1}$.
+\item $U$ is a valid quantum gate, because $UU^\dagger = I$.
+\end{enumerate}
+
+
 \printbibliography
 % \addcontentsline{toc}{section}{References}
 
