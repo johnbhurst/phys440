@@ -1,0 +1,163 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys440}
+
+\title{PHYS440 - Exercise on basis states}
+\author{John Hurst}
+\date{March 2024}
+
+\begin{document}
+\maketitle
+
+% \tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.3}{Given basis states $\{\ket{0}, \ket{1}\}$ for measurements on the $Z$ axis
+and $\{\ket{+},\ket{-}\}$ for measurements on the $X$ axis
+find suitable basis states for measurements on the $Y$ axis.
+}
+
+We'll follow the outline provided in exercise 2.3 in Susskind and Friedman\cite{susskind2014}.
+
+We start with the states $\ket{0}$ and $\ket{1}$ for the $Z$ axis.
+
+For the $X$ axis, we have:
+\begin{align*}
+\ket{+} & = \istwo(\ket{0} + \ket{1}) \\
+\ket{-} & = \istwo(\ket{0} - \ket{1})
+\end{align*}
+
+Rearranging, we also have:
+\begin{align*}
+\ket{0} & = \istwo(\ket{+} + \ket{-}) \\
+\ket{1} & = \istwo(\ket{+} - \ket{-})
+\end{align*}
+
+And also these facts:
+\begin{align*}
+\innerproduct{0}{0} = \innerproduct{1}{1} & = 1 \\
+\innerproduct{0}{1} = \innerproduct{1}{0} & = 0 \\
+\innerproduct{+}{+} = \innerproduct{-}{-} & = 1 \\
+\innerproduct{+}{-} = \innerproduct{-}{+} & = 0 \\
+|\innerproduct{0}{+}|^2 = \innerproduct{0}{+}\innerproduct{+}{0} & = \frac{1}{2} \\
+|\innerproduct{0}{-}|^2 = \innerproduct{0}{-}\innerproduct{-}{0} & = \frac{1}{2} \\
+|\innerproduct{1}{+}|^2 = \innerproduct{1}{+}\innerproduct{+}{1} & = \frac{1}{2} \\
+|\innerproduct{1}{-}|^2 = \innerproduct{1}{-}\innerproduct{-}{1} & = \frac{1}{2}
+\end{align*}
+
+We will denote the basis states for the $Y$ axis as $\ket{a}$ and $\ket{b}$ for now,
+and we will define them as a superposition of the $Z$ axis basis states:
+\begin{align*}
+\ket{a} & = \alpha\ket{0} + \beta\ket{1} \\
+\ket{b} & = \gamma\ket{0} + \delta\ket{1}
+\end{align*}
+where
+\begin{align*}
+\alpha & = \innerproduct{0}{a} & \overline{\alpha} & = \innerproduct{a}{0} \\
+\beta & = \innerproduct{1}{a} & \overline{\beta} & = \innerproduct{a}{1} \\
+\gamma & = \innerproduct{0}{b} & \overline{\gamma} & = \innerproduct{b}{0} \\
+\delta & = \innerproduct{1}{b} & \overline{\delta} & = \innerproduct{b}{1}
+\end{align*}
+
+For symmetry between the $Z$ and $Y$ axes, we have these relationships:
+\begin{align*}
+|\innerproduct{0}{a}|^2 = \innerproduct{0}{a}\innerproduct{a}{0} = \alpha\overline{\alpha} & = \frac{1}{2} \\
+|\innerproduct{1}{a}|^2 = \innerproduct{1}{a}\innerproduct{a}{1} = \beta\overline{\beta} & = \frac{1}{2} \\
+|\innerproduct{0}{b}|^2 = \innerproduct{0}{b}\innerproduct{b}{0} = \gamma\overline{\gamma} & = \frac{1}{2} \\
+|\innerproduct{1}{b}|^2 = \innerproduct{1}{b}\innerproduct{b}{1} = \delta\overline{\delta} & = \frac{1}{2}
+\end{align*}
+
+We also have similar relationships between the $X$ and $Y$ axes, in terms of $\ket{+}$ and $\ket{-}$,
+which we can rewrite in terms of $\ket{0}$ and $\ket{1}$.
+We can use $\innerproduct{+}{a}$ as follows:
+\begin{align*}
+|\innerproduct{+}{a}|^2 = \innerproduct{+}{a}\innerproduct{a}{+} & = \frac{1}{2} \\
+\istwo(\innerproduct{0}{a} + \innerproduct{1}{a})\istwo(\innerproduct{a}{0} + \innerproduct{a}{1}) & = \frac{1}{2} \\
+\frac{1}{2}\left(\innerproduct{0}{a}\innerproduct{a}{0} + \innerproduct{0}{a}\innerproduct{a}{1} + \innerproduct{1}{a}\innerproduct{a}{0} + \innerproduct{1}{a}\innerproduct{a}{1}\right) & = \frac{1}{2} \\
+\frac{1}{2} + \innerproduct{0}{a}\innerproduct{a}{1} + \innerproduct{1}{a}\innerproduct{a}{0} + \frac{1}{2} & = 1 \\
+\innerproduct{0}{a}\innerproduct{a}{1} + \innerproduct{1}{a}\innerproduct{a}{0} & = 0 \\
+\alpha\overline{\beta} + \beta\overline{\alpha} & = 0 \\
+\alpha\overline{\beta} & = -\overline{(\alpha\overline{\beta})}
+\end{align*}
+For $z=-\overline{z}$, we have $z$ purely imaginary, so $\alpha\overline{\beta}$ is purely imaginary,
+and $\alpha$ and $\beta$ cannot both be real.
+
+In the same way, we can find that $\gamma\overline{\delta}$ is purely imaginary,
+and so $\gamma$ and $\delta$ cannot both be real.
+
+We can set
+\begin{align*}
+\alpha & = \frac{1}{\sqrt{2}} \\
+\beta & = \frac{i}{\sqrt{2}} \\
+\gamma & = \frac{1}{\sqrt{2}} \\
+\delta & = -\frac{i}{\sqrt{2}}
+\end{align*}
+
+Then we have
+\begin{align*}
+\ket{a} & = \frac{1}{\sqrt{2}}\ket{0} + \frac{i}{\sqrt{2}}\ket{1} \\
+\ket{b} & = \frac{1}{\sqrt{2}}\ket{0} - \frac{i}{\sqrt{2}}\ket{1}
+\end{align*}
+
+Checking this, we have
+\begin{align*}
+\innerproduct{a}{a} & = \left(\istwo\bra{0} - \frac{i}{\sqrt{2}}\bra{1}\right) \left(\istwo\ket{0} + \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} + \frac{i}{2}\innerproduct{0}{1} - \frac{i}{2}\innerproduct{1}{0} + \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} + 0 - 0 + \frac{1}{2} \\
+& = 1 \\
+\innerproduct{a}{b} & = \left(\istwo\bra{0} - \frac{i}{\sqrt{2}}\bra{1}\right) \left(\istwo\ket{0} - \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} - \frac{i}{2}\innerproduct{0}{1} - \frac{i}{2}\innerproduct{1}{0} - \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} - 0 - 0 - \frac{1}{2} \\
+& = 0 \\
+\innerproduct{b}{b} & = \left(\istwo\bra{0} + \frac{i}{\sqrt{2}}\bra{1}\right) \left(\istwo\ket{0} - \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} - \frac{i}{2}\innerproduct{0}{1} + \frac{i}{2}\innerproduct{1}{0} + \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} - 0 + 0 + \frac{1}{2} \\
+& = 1 \\
+\innerproduct{b}{a} & = \left(\istwo\bra{0} + \frac{i}{\sqrt{2}}\bra{1}\right) \left(\istwo\ket{0} + \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} + \frac{i}{2}\innerproduct{0}{1} + \frac{i}{2}\innerproduct{1}{0} - \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} + 0 + 0 - \frac{1}{2} \\
+& = 0
+\end{align*}
+
+We have shown that the basis states for the $Y$ axis require complex numbers.
+But the particular $\ket{a}$ and $\ket{b}$ we have chosen are not unique.
+We can introduce an arbitrary phase factor $e^{i\theta} (\theta\in\R)$ to $\ket{a}$ and $\ket{b}$, and they will still be valid basis states for the $Y$ axis.
+
+Let
+\begin{align*}
+\ket{c} & = e^{i\theta}\ket{a} = \frac{e^{i\theta}}{\sqrt{2}}\left(\ket{0} + i\ket{1}\right) \\
+\ket{d} & = e^{i\theta}\ket{b} = \frac{e^{i\theta}}{\sqrt{2}}\left(\ket{0} - i\ket{1}\right)
+\end{align*}
+
+The magnitudes of the amplitudes are unchanged, so the Born rule requirement is still met.
+
+We can also check the inner products of these states:
+\begin{align*}
+\innerproduct{c}{c} & = \frac{e^{-i\theta}}{\sqrt{2}}\left(\bra{0} - \frac{i}{\sqrt{2}}\bra{1}\right) \frac{e^{i\theta}}{\sqrt{2}}\left(\ket{0} + \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} + \frac{i}{2}\innerproduct{0}{1} - \frac{i}{2}\innerproduct{1}{0} + \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} + 0 - 0 + \frac{1}{2} \\
+& = 1 \\
+\innerproduct{c}{d} & = \frac{e^{-i\theta}}{\sqrt{2}}\left(\bra{0} - \frac{i}{\sqrt{2}}\bra{1}\right) \frac{e^{i\theta}}{\sqrt{2}}\left(\ket{0} - \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} - \frac{i}{2}\innerproduct{0}{1} - \frac{i}{2}\innerproduct{1}{0} - \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} - 0 - 0 - \frac{1}{2} \\
+& = 0 \\
+\innerproduct{d}{d} & = \frac{e^{-i\theta}}{\sqrt{2}}\left(\bra{0} + \frac{i}{\sqrt{2}}\bra{1}\right) \frac{e^{i\theta}}{\sqrt{2}}\left(\ket{0} - \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} - \frac{i}{2}\innerproduct{0}{1} + \frac{i}{2}\innerproduct{1}{0} + \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} - 0 + 0 + \frac{1}{2} \\
+& = 1 \\
+\innerproduct{d}{c} & = \frac{e^{-i\theta}}{\sqrt{2}}\left(\bra{0} + \frac{i}{\sqrt{2}}\bra{1}\right) \frac{e^{i\theta}}{\sqrt{2}}\left(\ket{0} + \frac{i}{\sqrt{2}}\ket{1}\right) \\
+& = \frac{1}{2}\innerproduct{0}{0} + \frac{i}{2}\innerproduct{0}{1} + \frac{i}{2}\innerproduct{1}{0} - \frac{1}{2}\innerproduct{1}{1} \\
+& = \frac{1}{2} + 0 + 0 - \frac{1}{2} \\
+& = 0
+\end{align*}
+
+The $\ket{a}$ and $\ket{b}$ above are the simplest of infinitely many possible choices.
+Following the nice convention in Wong\cite{wong2022}, let's relabel these:
+\begin{align*}
+\ket{i} & = \ket{a} = \frac{1}{\sqrt{2}}\ket{0} + \frac{i}{\sqrt{2}}\ket{1} \\
+\ket{-i} & = \ket{b} = \frac{1}{\sqrt{2}}\ket{0} - \frac{i}{\sqrt{2}}\ket{1} \\
+\end{align*}
+
+\printbibliography
+% \addcontentsline{toc}{section}{References}
+
+\end{document}
