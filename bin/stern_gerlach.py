@@ -20,5 +20,4 @@ circuit.measure(qr[0], cr[2])
 circuit.draw('mpl')
 
 result = jhqiskit.run(circuit)
-
-print(result)
+jhqiskit.print_result(result)

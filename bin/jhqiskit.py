@@ -2,6 +2,7 @@
 # John Hurst (john.b.hurst@gmail.com)
 # 2024-03-07
 
+
 from qiskit.providers.basic_provider import BasicProvider
 from qiskit.primitives import BackendSampler
 
@@ -12,3 +13,10 @@ def run(circuit, shots=1024):
     job = sampler.run(circuit, shots=shots)
     return job.result()
 
+
+def print_result(result):
+    dists = result.quasi_dists
+    assert(len(dists) == 1)
+    dists = {format(int(k), '03b'): v for k, v in dists[0].items()}
+    for k in sorted(dists.keys()):
+        print(f'{k}: {dists[k]:.4f}')
