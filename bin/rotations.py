@@ -12,10 +12,10 @@ qr = QuantumRegister(1, 'q')
 cr = ClassicalRegister(1, 'c')
 circuit = QuantumCircuit(qr, cr)
 
-circuit.rx(pi/3, qr[0])
+circuit.rx(pi/2, qr[0])
 circuit.measure(qr, cr)
 
 circuit.draw('mpl')
 
-# result = jhqiskit.run(circuit)
-# jhqiskit.print_result(result)
+result = jhqiskit.run(circuit)
+jhqiskit.print_result(result)
