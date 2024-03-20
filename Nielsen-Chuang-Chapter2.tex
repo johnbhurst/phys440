@@ -86,6 +86,50 @@ B(A\vec{v}) & = \sum_{k=1}^n \left[\sum_{j=1}^m B_{kj} \left(\sum_{i=1}^l A_{ji}
 \end{align*}
 That is, the matrix representation of the linear operator $BA$ is the matrix product of the matrix representations for $B$ and $A$.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2.11}{(Eigendecomposition of the Pauli matrices) Find the eigenvectors, eigenvalues and diagonal representations of the Pauli matrices $X$, $Y$ and $Z$.
+}
+
+$X$ matrix:
+\begin{align*}
+\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} & = \lambda \begin{pmatrix} x \\ y \end{pmatrix} \\
+y & = \lambda x \\
+x & = \lambda y \\
+\end{align*}
+This gives two solutions for $X$: eigenvalue $\lambda=1$ with eigenvector $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$, and eigenvalue $\lambda=-1$ with eigenvector $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$.
+
+The diagonal form of $X$ is
+\[
+\begin{pmatrix}-1 & 0 \\ 0 & 1\end{pmatrix} = \begin{pmatrix}-\frac{1}{2} & \frac{1}{2} \\ \frac{1}{2} & \frac{1}{2}\end{pmatrix} \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \begin{pmatrix}-1 & 1 \\ 1 & 1\end{pmatrix}
+\]
+
+$Y$ matrix:
+\begin{align*}
+\begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} & = \lambda \begin{pmatrix} x \\ y \end{pmatrix} \\
+\lambda x & = -i y \\
+i x & = \lambda y \\
+y & = \lambda^2 y
+\end{align*}
+
+This gives two solutions for $Y$: eigenvalue $\lambda=1$ with eigenvector $\begin{pmatrix} 1 \\ i \end{pmatrix}$, and eigenvalue $\lambda=-1$ with eigenvector $\begin{pmatrix} 1 \\ -i \end{pmatrix}$.
+
+A diagonal form of $Y$ is
+\[
+\begin{pmatrix}-1 & 0 \\ 0 & 1\end{pmatrix} = \begin{pmatrix}-\frac{i}{2} & \frac{1}{2} \\ \frac{i}{2} & \frac{1}{2}\end{pmatrix} \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix} \begin{pmatrix}i & -i \\ 1 & 1\end{pmatrix}
+\]
+
+
+$Z$ matrix:
+\begin{align*}
+\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} & = \lambda \begin{pmatrix} x \\ y \end{pmatrix} \\
+x & = \lambda x \\
+y & = -\lambda y
+\end{align*}
+
+This gives two solutions for $Z$: eigenvalue $\lambda=1$ with eigenvector $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$, and eigenvalue $\lambda=-1$ with eigenvector $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$.
+
+The $Z$ matrix is already in diagonal form.
+
 % \printbibliography
 % \addcontentsline{toc}{section}{References}
 

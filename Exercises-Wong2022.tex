@@ -8,8 +8,6 @@
 \begin{document}
 \maketitle
 
-\tableofcontents
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{1.1}{How many possible states do (a) four coins have? (b) five coins?
 }
@@ -464,16 +462,16 @@ A & = \frac{e^{i\theta}}{\sqrt{13}}
 \begin{enumerate}[(a)]
 \item The probability of measuring $\ket{0}$ is $\left|\frac{1}{2}\right|^2 = \frac{1}{4}$.
 The probability of measuring $\ket{1}$ is $\left|-\frac{\sqrt{3}}{2}\right|^2 = \frac{3}{4}$.
-\item The $X$-basis states are $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$ and $\ket{-} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$.
+\item The $X$-basis states are $\ket{+} = \istwo(\ket{0} + \ket{1})$ and $\ket{-} = \istwo(\ket{0} - \ket{1})$.
 Thus we have:
 \begin{align*}
-\ket{+} & = \frac{1}{\sqrt{2}}\left(\ket{0}+\ket{1}\right) & \ket{-} & = \frac{1}{\sqrt{2}}\left(\ket{0}-\ket{1}\right) \\
-\ket{+} + \ket{-1} & = \sqrt{2}\ket{0} & \ket{0} & = \frac{1}{\sqrt{2}}\left(\ket{+}+\ket{-}\right) \\
-\ket{+} - \ket{-1} & = \sqrt{2}\ket{1} & \ket{1} & = \frac{1}{\sqrt{2}}\left(\ket{+}-\ket{-}\right)
+\ket{+} & = \istwo\left(\ket{0}+\ket{1}\right) & \ket{-} & = \istwo\left(\ket{0}-\ket{1}\right) \\
+\ket{+} + \ket{-1} & = \sqrt{2}\ket{0} & \ket{0} & = \istwo\left(\ket{+}+\ket{-}\right) \\
+\ket{+} - \ket{-1} & = \sqrt{2}\ket{1} & \ket{1} & = \istwo\left(\ket{+}-\ket{-}\right)
 \end{align*}
 From these we calculate the qubit's state in the $X$-basis:
 \begin{align*}
-\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2}\ket{1} & = \frac{1}{2}\left(\frac{1}{\sqrt{2}}\left(\ket{+}+\ket{-}\right)\right) - \frac{\sqrt{3}}{2}\left(\frac{1}{\sqrt{2}}\left(\ket{+}-\ket{-}\right)\right) \\
+\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2}\ket{1} & = \frac{1}{2}\left(\istwo\left(\ket{+}+\ket{-}\right)\right) - \frac{\sqrt{3}}{2}\left(\istwo\left(\ket{+}-\ket{-}\right)\right) \\
 & = \frac{1}{2\sqrt{2}}\ket{+} + \frac{1}{2\sqrt{2}}\ket{-} - \frac{\sqrt{3}}{2\sqrt{2}}\ket{+} + \frac{\sqrt{3}}{2\sqrt{2}}\ket{-} \\
 & = \frac{1-\sqrt{3}}{2\sqrt{2}}\ket{+} + \frac{1+\sqrt{3}}{2\sqrt{2}}\ket{-}
 \end{align*}
@@ -532,8 +530,8 @@ From either of these states, a measurement in the $Z$-basis will give
 If yes, give a measurement.
 If no, explain your reasoning.
 \begin{enumerate}[(a)]
-\item $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$ and $e^{i\pi/8}\ket{+} = \frac{e^{i\pi/8}}{\sqrt{2}}(\ket{0}+\ket{1})$
-\item $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$ and $\ket{-} = \frac{1}{\sqrt{2}}(\ket{0}-\ket{1})$
+\item $\ket{+} = \istwo(\ket{0}+\ket{1})$ and $e^{i\pi/8}\ket{+} = \frac{e^{i\pi/8}}{\sqrt{2}}(\ket{0}+\ket{1})$
+\item $\ket{+} = \istwo(\ket{0}+\ket{1})$ and $\ket{-} = \istwo(\ket{0}-\ket{1})$
 \item $\ket{0}$ and $e^{i\pi/4}\ket{0}$
 \end{enumerate}
 }
@@ -547,7 +545,7 @@ If no, explain your reasoning.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{2.14}{A qubit is in the state
 \[
-\ket{i} = \frac{1}{\sqrt{2}}(\ket{0}+i\ket{1}).
+\ket{i} = \istwo(\ket{0}+i\ket{1}).
 \]
 \begin{enumerate}[(a)]
 \item Where on the Bloch sphere is this state? Give your answer in $(\theta,\phi)$ coordinates.
@@ -558,9 +556,9 @@ If no, explain your reasoning.
 \begin{enumerate}[(a)]
 \item
 \begin{align*}
-\ket{i} & = \frac{1}{\sqrt{2}}\left(\ket{0}+i\ket{1}\right) \\
+\ket{i} & = \istwo\left(\ket{0}+i\ket{1}\right) \\
 & = \cos(\frac{\theta}{2})\ket{0} + e^{i\phi}\sin(\frac{\theta}{2})\ket{1} \\
-\implies \cos(\frac{\theta}{2}) & = \frac{1}{\sqrt{2}} \\
+\implies \cos(\frac{\theta}{2}) & = \istwo \\
 \frac{\theta}{2} & = \frac{\pi}{4} \\
 \theta & = \frac{\pi}{2} \\
 e^{i\phi} & = i \\
@@ -687,6 +685,93 @@ Say $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ is a normalized quantum state, i
 \item $U$ is a valid quantum gate, because $UU^\dagger = I$.
 \end{enumerate}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{4.3}{Calculate the following inner products:
+\begin{enumerate}[(a)]
+\item $\innerproduct{10}{11}$.
+\item $\innerproduct{+-}{01}$.
+\item $\innerproduct{1+0}{1-0}$.
+\end{enumerate}
+}
+\begin{enumerate}[(a)]
+\item
+\begin{align*}
+\innerproduct{10}{11} & = \innerproduct{1}{1}\innerproduct{0}{1} \\
+& = 1\times 0 \\
+& = 0
+\end{align*}
+This is expected because $\ket{10}$ and $\ket{11}$ are orthogonal.
+\item
+\begin{align*}
+\innerproduct{+-}{01} & = \innerproduct{+}{0}\innerproduct{-}{1} \\
+& = \left(\istwo\innerproduct{0}{0} + \istwo\innerproduct{1}{0}\right) \left(\istwo\innerproduct{0}{1} - \istwo\innerproduct{1}{1}\right) \\
+& = \left(\istwo\times 1 + \istwo\times 0\right) \left(\istwo\times 0 - \istwo\times 1\right) \\
+& = -\frac{1}{2}
+\end{align*}
+
+\item
+\begin{align*}
+\innerproduct{1+0}{1-0} & = \innerproduct{1}{1} \innerproduct{+}{-} \innerproduct{0}{0} \\
+& = 1 \times 0 \times 1 \\
+& = 0
+\end{align*}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{4.4}{Verify that
+\[
+\ket{1} \otimes \ket{1} \otimes \ket{0} =
+\begin{pmatrix} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 1 \\ 0 \end{pmatrix}.
+\]
+}
+\begin{align*}
+\ket{1} \otimes \ket{1} \otimes \ket{0} & = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \otimes \begin{pmatrix} 0 \\ 1 \end{pmatrix} \otimes \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
+& = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \otimes \begin{pmatrix} 0 \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\ 1 \begin{pmatrix} 1 \\ 0 \end{pmatrix} \end{pmatrix} \\
+& = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \otimes \begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix} \\
+& = \begin{pmatrix} 0 \begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix} \\ 1 \begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix} \end{pmatrix} \\
+& = \begin{pmatrix} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 1 \\ 0 \end{pmatrix}.
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{4.5}{Consider a two-qubit state
+\[
+\ket{\psi} = \frac{1}{2}\ket{00} + \frac{i}{\sqrt{2}}\ket{10} + \frac{\sqrt{3}+i}{4}\ket{11}.
+\]
+\begin{enumerate}[(a)]
+\item What is $\ket{\psi}$ as a (column) vector?
+\item What is $\bra{\psi}$ as a (row) vector?
+\end{enumerate}
+}
+
+\begin{enumerate}[(a)]
+\item
+\[
+\ket{\psi} = \begin{pmatrix} \frac{1}{2} \\ 0 \\ \frac{i}{\sqrt{2}} \\ \frac{\sqrt{3}+i}{4} \end{pmatrix}.
+\]
+
+\item
+\[
+\bra{\psi} = \begin{pmatrix} \frac{1}{2} & 0 & -\frac{i}{\sqrt{2}} & \frac{\sqrt{3}-i}{4} \end{pmatrix}.
+\]
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{4.6}{Show that $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$ is a complete orthonornmal basis the state of two qubits by showing that it satisfies the completeness relation
+\[
+\ket{00}\bra{00} + \ket{01}\bra{01} + \ket{10}\bra{10} + \ket{11}\bra{11} = I.
+\]
+where $I$ is the identity matrix:
+\[
+I = \begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}.
+\]
+}
+\begin{multline*}
+\ket{00}\bra{00} + \ket{01}\bra{01} + \ket{10}\bra{10} + \ket{11}\bra{11} \\
+= \begin{pmatrix} 1 \\ 0 \\ 0 \\ 0 \end{pmatrix}\begin{pmatrix} 1 & 0 & 0 & 0 \end{pmatrix} + \begin{pmatrix} 0 \\ 1 \\ 0 \\ 0 \end{pmatrix}\begin{pmatrix} 0 & 1 & 0 & 0 \end{pmatrix} + \begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix}\begin{pmatrix} 0 & 0 & 1 & 0 \end{pmatrix} + \begin{pmatrix} 0 \\ 0 \\ 0 \\ 1 \end{pmatrix}\begin{pmatrix} 0 & 0 & 0 & 1 \end{pmatrix} \\
+= \begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{pmatrix} + \begin{pmatrix} 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{pmatrix} + \begin{pmatrix} 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 \end{pmatrix} + \begin{pmatrix} 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix} \\
+= \begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix} \\
+\end{multline*}
 
 \printbibliography
 % \addcontentsline{toc}{section}{References}
