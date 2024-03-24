@@ -8,7 +8,7 @@ from qiskit import  ClassicalRegister, QuantumCircuit, QuantumRegister
 
 
 qr = QuantumRegister(1, 'q')
-cr = ClassicalRegister(3, 'c')
+cr = ClassicalRegister(1, 'c')
 circuit = QuantumCircuit(qr, cr)
 
 circuit.h(qr[0])
