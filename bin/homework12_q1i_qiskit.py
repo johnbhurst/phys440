@@ -19,6 +19,7 @@ parser.add_argument('--psiminus', action='store_true', help='Create PsiMinus sta
 parser.add_argument('--shots', type=int, default=1024, help='Number of shots')
 parser.add_argument('--transpile', type=str, default=None, help='Transpile to target architecture, e.g. "eagle"')
 parser.add_argument('--filename', type=str, help='Filename for output')
+parser.add_argument('--format', type=str, default='mpl', help='Output format (mpl, latex)')
 args = parser.parse_args()
 
 if not args.phiplus and not args.phiminus and not args.psiplus and not args.psiminus:
@@ -52,8 +53,13 @@ if args.transpile:
     circuit = transpile(circuit, basis_gates=basis_gates)
 
 if args.filename:
-    with open(args.filename, 'w') as f:
+    if args.format == 'mpl':
         circuit.draw('mpl', filename=args.filename)
+    elif args.format == 'latex':
+        circuit.draw('latex', filename=args.filename)
+    else:
+        print(f"Unknown format {args.format}; allowed values are 'mpl', 'latex'")
+        exit(1)
 
 backend = BasicProvider().get_backend('basic_simulator')
 sampler = BackendSampler(backend)
