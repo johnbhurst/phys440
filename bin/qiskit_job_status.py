@@ -13,12 +13,17 @@ args = parser.parse_args()
 
 service = QiskitRuntimeService(channel='ibm_quantum')
 job = service.job(args.job_id)
+print(f"Status: {job.status()}")
+print(f"Backend: {job.backend().name}")
+print(f"Tags: {job.tags}")
 
 if job.status() == JobStatus.DONE:
     job_result = job.result()
-
     for idx, pub_result in enumerate(job_result):
-        print(f"Sample data for pub {idx}: {pub_result.data.meas.get_counts()}")
-
-else:
-    print(job.status())
+        if job.backend().name == "ibm_osaka":
+            print(f"Sample data for pub {idx}: {pub_result.data.c.get_counts()}")
+        elif job.backend().name == "ibm_brisbane":
+            print(f"Sample data for pub {idx}: {pub_result.data.meas.get_counts()}")
+        else:
+            print(f"Unrecognised backend: {job.backend().name}")
+            exit(1)
