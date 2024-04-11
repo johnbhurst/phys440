@@ -23,7 +23,8 @@ if job.status() == JobStatus.DONE:
         if job.backend().name == "ibm_osaka":
             print(f"Sample data for pub {idx}: {pub_result.data.c.get_counts()}")
         elif job.backend().name == "ibm_brisbane":
-            print(f"Sample data for pub {idx}: {pub_result.data.meas.get_counts()}")
+            # print(f"Sample data for pub {idx}: {pub_result.data.meas.get_counts()}")
+            print(f"Sample data for pub {idx}: {pub_result.data.c.get_counts()}")
         else:
             print(f"Unrecognised backend: {job.backend().name}")
             exit(1)
