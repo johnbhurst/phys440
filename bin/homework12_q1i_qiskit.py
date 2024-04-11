@@ -3,6 +3,7 @@
 # John Hurst (john.b.hurst@gmail.com)
 # 2024-03-24
 
+# PHYS440: Homework 1+2 Q1(i): Bell states PhiPlus, PhiMinus, PsiPlus, PsiMinus
 # See https://docs.quantum.ibm.com/run/native-gates#native-gates-on-platform
 
 import argparse
