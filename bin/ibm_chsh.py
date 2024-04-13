@@ -2,6 +2,20 @@
 # Adapted from https://learning.quantum.ibm.com/tutorial/chsh-inequality
 
 import argparse
+import matplotlib.pyplot as plt
+import matplotlib.ticker as tck
+import numpy as np
+import warnings
+from qiskit import QuantumCircuit
+from qiskit_ibm_runtime import EstimatorV2 as Estimator, QiskitRuntimeService
+from qiskit.circuit import Parameter
+from qiskit.primitives import StatevectorEstimator
+from qiskit.providers.basic_provider import BasicProvider
+from qiskit.quantum_info import SparsePauliOp
+from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
+
+warnings.filterwarnings("ignore")
+
 parser = argparse.ArgumentParser(description='IBM CHSH example')
 parser.add_argument("--run", action="store_true", help="Run on IBM Quantum")
 parser.add_argument("--simulate", action="store_true", help="Run on Simulator")
@@ -10,27 +24,6 @@ args = parser.parse_args()
 if args.run == args.simulate:
     print("Please select either --run or --simulate")
     exit(1)
-
-# General
-import numpy as np
-import warnings
-
-warnings.filterwarnings("ignore")
-
-# Qiskit imports
-from qiskit import QuantumCircuit
-from qiskit.circuit import Parameter
-from qiskit.primitives import StatevectorEstimator
-from qiskit.providers.basic_provider import BasicProvider
-from qiskit.quantum_info import SparsePauliOp
-
-# Qiskit Runtime imports
-from qiskit_ibm_runtime import QiskitRuntimeService
-from qiskit_ibm_runtime import EstimatorV2 as Estimator
-
-# Plotting routines
-import matplotlib.pyplot as plt
-import matplotlib.ticker as tck
 
 if args.run:
     # To run on hardware, select the backend with the fewest number of jobs in the queue
@@ -61,8 +54,6 @@ observable1 = SparsePauliOp.from_list([("ZZ", 1), ("ZX", -1), ("XZ", 1), ("XX", 
 
 # <CHSH2> = <AB> + <Ab> - <aB> + <ab> -> <ZZ> + <ZX> - <XZ> + <XX>
 observable2 = SparsePauliOp.from_list([("ZZ", 1), ("ZX", 1), ("XZ", -1), ("XX", 1)])
-
-from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 
 target = backend.target
 pm = generate_preset_pass_manager(target=target, optimization_level=3)
