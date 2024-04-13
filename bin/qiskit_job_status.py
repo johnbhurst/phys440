@@ -20,11 +20,9 @@ print(f"Tags: {job.tags}")
 if job.status() == JobStatus.DONE:
     job_result = job.result()
     for idx, pub_result in enumerate(job_result):
-        if job.backend().name == "ibm_osaka":
+        if "c" in dir(pub_result.data):
             print(f"Sample data for pub {idx}: {pub_result.data.c.get_counts()}")
-        elif job.backend().name == "ibm_brisbane":
-            # print(f"Sample data for pub {idx}: {pub_result.data.meas.get_counts()}")
-            print(f"Sample data for pub {idx}: {pub_result.data.c.get_counts()}")
+        elif "evs" in dir(pub_result.data):
+            print(f"Estimate data for pub {idx}: {pub_result.data.evs}")
         else:
-            print(f"Unrecognised backend: {job.backend().name}")
-            exit(1)
+            print(f"I don't recognize the data type for pub {idx}: {dir(pub_result.data)}")
