@@ -22,6 +22,8 @@ if job.status() == JobStatus.DONE:
     for idx, pub_result in enumerate(job_result):
         if "c" in dir(pub_result.data):
             print(f"Sample data for pub {idx}: {pub_result.data.c.get_counts()}")
+        elif "meas" in dir(pub_result.data):
+            print(f"Sample data for pub {idx}: {pub_result.data.meas.get_counts()}")
         elif "evs" in dir(pub_result.data):
             print(f"Estimate data for pub {idx}: {pub_result.data.evs}")
         else:
