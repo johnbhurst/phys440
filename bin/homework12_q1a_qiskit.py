@@ -59,7 +59,7 @@ circuit.measure(qreg_q[0], creg_c[0])
 circuit.measure(qreg_q[1], creg_c[1])
 
 # Transpile if requested
-# Note: Although this transpilation geenrates circuits using supported gates for the target architecture,
+# Note: Although this transpilation generates circuits using supported gates for the target architecture,
 # the circuits are still not compatible with the rarget instruction set architectures, due to qubit allocation.
 # Use the --pass-manager option when running circuits on IBM Quantum.
 if args.transpile:
