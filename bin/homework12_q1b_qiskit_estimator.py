@@ -32,9 +32,9 @@ if (1 if args.run else 0) + (1 if args.simulate else 0) + (1 if args.review else
     exit(1)
 
 # Define circuit for Bell state |Φ⁺⟩ = (|00⟩ + |11⟩) / √2.
-chsh_circuit = QuantumCircuit(2)
-chsh_circuit.h(0)
-chsh_circuit.cx(0, 1)
+circuit = QuantumCircuit(2)
+circuit.h(0)
+circuit.cx(0, 1)
 # Define observable as 1 * X_1 * X_0.
 observable = SparsePauliOp.from_list([("XX", 1)])
 
@@ -53,12 +53,12 @@ elif args.simulate:
 if args.run or args.simulate:
     target = backend.target
     pm = generate_preset_pass_manager(target=target, optimization_level=3)
-    chsh_isa_circuit = pm.run(chsh_circuit)
+    isa_circuit = pm.run(circuit)
     if args.filename:
-        chsh_isa_circuit.draw(output='mpl', idle_wires=False, style='iqp', filename=args.filename)
+        isa_circuit.draw(output='mpl', idle_wires=False, style='iqp', filename=args.filename)
 
-    isa_observable = observable.apply_layout(layout=chsh_isa_circuit.layout)
-    pub = (chsh_isa_circuit, [[isa_observable]])
+    isa_observable = observable.apply_layout(layout=isa_circuit.layout)
+    pub = (isa_circuit, [[isa_observable]])
     job = estimator.run(pubs=[pub])
 
 if args.run:
