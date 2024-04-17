@@ -3,7 +3,7 @@
 
 \title{PHYS440 - Homework 1+2}
 \author{John Hurst}
-\date{March 2024}
+\date{April 2024}
 
 \begin{document}
 \maketitle
@@ -13,11 +13,11 @@
 
 The \textit{Qiskit} textbook chapter on Multiple Qubits and Entangled States explains how to generate the entangled two qubit state
 \begin{equation}\label{eq:phiplus}
-\ket\Phi^{+} = \istwo(\ket{00} + \ket{11})
+\ket{\Phi^{+}} = \istwo(\ket{00} + \ket{11})
 \end{equation}
 and gives the creation of the Bell state
 \begin{equation}\label{eq:psiplus}
-\ket\Psi^{+} = \istwo(\ket{01} + \ket{10})
+\ket{\Psi^{+}} = \istwo(\ket{01} + \ket{10})
 \end{equation}
 as an exercise.
 Read this/remind yourself of the relevant material.
@@ -27,10 +27,10 @@ Use this preparation to answer the following questions.
 \begin{enumerate}[(a)]
 \item Design the quantum circuits that, starting from the two-qubit state $\ket{00}$, create the remaining two Bell states
 \begin{equation}\label{eq:phiminus}
-\ket\Phi^{-} = \istwo(\ket{00} - \ket{11})
+\ket{\Phi^{-}} = \istwo(\ket{00} - \ket{11})
 \end{equation}
 \begin{equation}\label{eq:psiminus}
-\ket\Psi^{-} = \istwo(\ket{01} - \ket{10})
+\ket{\Psi^{-}} = \istwo(\ket{01} - \ket{10})
 \end{equation}
 Show (by using matrix representations of the quantum gates) that the circuits that you have designed indeed yield the Bell states as their output.
 Submit the circuit diagrams and state-vector simulations from \textit{IBM Quantum} as part of your solution.
@@ -45,17 +45,22 @@ Submit screenshots of your \textit{IBM Quantum} jobs as part of your solution.
 
 \begin{enumerate}[(a)]
 \item There are a number of different circuits possible for each Bell state.
-The attached Mathematica notebook shows each Bell state created with
-certain specific simple circuits using H, CNOT, NOT and Z gates.
-
-I have run circuits for all four Bell states on the IBM quantum simulator.
-Screenshots are below:
+These two simple examples are perhaps the simplest circuits for $\ket{\Phi^{-}}$ and $\ket{\Psi^{-}}$:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.80\textwidth]{images/Bell-PhiPlus-IBM-Quantum.png}
-\caption{Bell state $\ket{\Phi^{+}}$ on IBM Quantum}
+\includegraphics[width=0.80\textwidth]{images/qiskit_phiminus.png}
+\caption{Bell state $\ket{\Phi^{-}}$ with Qiskit}
 \end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/qiskit_psiminus.png}
+\caption{Bell state $\ket{\Psi^{-}}$ with Qiskit}
+\end{figure}
+
+I ran simple circuits for all four Bell states in the IBM Quantum simulator using the web circuit composer.
+The screen shots are included in the submitted files, and the ones for $\ket{\Phi^{-}}$ and $\ket{\Psi^{-}}$ are shown above.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.80\textwidth]{images/Bell-PhiMinus-IBM-Quantum.png}
@@ -63,92 +68,163 @@ Screenshots are below:
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.80\textwidth]{images/Bell-PsiPlus-IBM-Quantum.png}
-\caption{Bell state $\ket{\Psi^{+}}$ on IBM Quantum}
-\end{figure}
-\begin{figure}[H]
-\centering
 \includegraphics[width=0.80\textwidth]{images/Bell-PsiMinus-IBM-Quantum.png}
 \caption{Bell state $\ket{\Psi^{-}}$ on IBM Quantum}
 \end{figure}
 
-I've also run these circuits locally using the Basic provider in the Qiskit Python library:
-\begin{footnotesize}
-\begin{lstlisting}[language=Python]
-... # other imports
-from qiskit import  ClassicalRegister, QuantumCircuit, QuantumRegister
-from qiskit.providers.basic_provider import BasicProvider
-from qiskit.primitives import BackendSampler
+The IBM Quantum systems follow several architectures, each of which supports only a subset of possible gates.
+The Hadamard and CNOT gates are generally not available, and circuits must be designed or transpiled
+to use only the available gates.
 
-# argument parsing code omitted
+The attached Mathematica notebook
+Homework\_1+2\_Q1a\_BellStates.nb
+shows each Bell state created with
+simple ``canonical'' circuits (using H and CNOT), and also with circuits using only the gates available on the IBM Quantum systems.
+For each circuit the diagram, probability plot, matrix form and output state are shown.
 
-qreg_q = QuantumRegister(2, 'q')
-creg_c = ClassicalRegister(2, 'c')
-circuit = QuantumCircuit(qreg_q, creg_c)
+I wrote Python programs using both IBM's Qiskit and Google's Cirq libraries to generate the circuits and simulate them.
+The programs are included in the submitted files.
 
-circuit.h(qreg_q[0])
-circuit.cx(qreg_q[0], qreg_q[1])
-if args.psiplus or args.psiminus:
-    circuit.x(qreg_q[0])
-if args.phiminus or args.psiminus:
-    circuit.z(qreg_q[0])
-circuit.measure(qreg_q[0], creg_c[0])
-circuit.measure(qreg_q[1], creg_c[1])
+The output of the Qiskit program is:
+\begin{verbatim}
+bin/homework12_q1a_qiskit.py --simulate --state=phiplus
+00: 0.4893
+11: 0.5107
+bin/homework12_q1a_qiskit.py --simulate --state=phiminus
+00: 0.5195
+11: 0.4805
+bin/homework12_q1a_qiskit.py --simulate --state=psiplus
+01: 0.4717
+10: 0.5283
+bin/homework12_q1a_qiskit.py --simulate --state=psiminus
+01: 0.5029
+10: 0.4971
+\end{verbatim}
 
-if args.filename:
-    with open(args.filename, 'w') as f:
-        circuit.draw('mpl', filename=args.filename)
+% Circ program output omitted because of Unicode
 
-backend = BasicProvider().get_backend('basic_simulator')
-sampler = BackendSampler(backend)
-job = sampler.run(circuit, shots=args.shots)
-result = job.result()
-dists = {'{:02b}'.format(int(k)): v
-         for k, v in result.quasi_dists[0].items()}
-for k in sorted(dists.keys()):
-    print(f'{k}: {dists[k]:.4f}')
-\end{lstlisting}
-\end{footnotesize}
+% The output of the Circ program is:
+% \begin{verbatim}
+% bin/homework12_q1a_cirq.py --phiplus
+% 0: ───H───@───
+%           │
+% 1: ───────X───
+% measurements: (no measurements)
 
-This produces output such as:
-\begin{footnotesize}
-\begin{lstlisting}
-$ bin/homework12_q1i.py --phiplus --filename=images/qiskit_phiplus.png
-00: 0.5010
-11: 0.4990
-$ bin/homework12_q1i.py --phiminus --filename=images/qiskit_phiminus.png
-00: 0.5078
-11: 0.4922
-$ bin/homework12_q1i.py --psiplus --filename=images/qiskit_psiplus.png
-01: 0.4951
-10: 0.5049
-$ bin/homework12_q1i.py --psiminus --filename=images/qiskit_psiminus.png
-01: 0.4805
-10: 0.5195
-\end{lstlisting}
-\end{footnotesize}
+% qubits: (cirq.LineQubit(0), cirq.LineQubit(1))
+% output vector: 0.707|00⟩ + 0.707|11⟩
 
-And also these circuit images:
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.50\textwidth]{images/qiskit_phiplus.png}
-\caption{Bell state $\ket{\Phi^{+}}$ on local simulator}
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.50\textwidth]{images/qiskit_phiminus.png}
-\caption{Bell state $\ket{\Phi^{-}}$ on local simulator}
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.50\textwidth]{images/qiskit_psiplus.png}
-\caption{Bell state $\ket{\Psi^{+}}$ on local simulator}
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.50\textwidth]{images/qiskit_psiminus.png}
-\caption{Bell state $\ket{\Psi^{-}}$ on local simulator}
-\end{figure}
+% phase:
+% output vector: |⟩
+
+% bin/homework12_q1a_cirq.py --phiminus
+% 0: ───H───@───Z───
+%           │
+% 1: ───────X───────
+% measurements: (no measurements)
+
+% qubits: (cirq.LineQubit(0), cirq.LineQubit(1))
+% output vector: 0.707|00⟩ - 0.707|11⟩
+
+% phase:
+% output vector: |⟩
+
+% bin/homework12_q1a_cirq.py --psiplus
+% 0: ───H───@───X───
+%           │
+% 1: ───────X───────
+% measurements: (no measurements)
+
+% qubits: (cirq.LineQubit(0), cirq.LineQubit(1))
+% output vector: 0.707|01⟩ + 0.707|10⟩
+
+% phase:
+% output vector: |⟩
+
+% bin/homework12_q1a_cirq.py --psiminus
+% 0: ───H───@───X───Z───
+%           │
+% 1: ───────X───────────
+% measurements: (no measurements)
+
+% qubits: (cirq.LineQubit(0), cirq.LineQubit(1))
+% output vector: 0.707|01⟩ - 0.707|10⟩
+
+% phase:
+% output vector: |⟩
+% \end{verbatim}
+
+The Qiskit version of the program also supports running on the real IBM Quantum hardware, using the Qiskit \texttt{Sampler} feature.
+This includes a transpilation step to convert the circuit to use only the available gates.
+I captured the transpiled circuits and the results of running them on the IBM Quantum hardware.
+Because the transpiled circuits include a very large number of ancilla bits, I have cropped the images to show only the relevant parts.
+I've included the images in the submitted files.
+
+Once the jobs are completed, I queried the results:
+\begin{verbatim}
+bin/qiskit_job_status.py cr48fcd0dz600086ntg0
+Status: JobStatus.DONE
+Backend: ibm_osaka
+Tags: ['homework12', 'bell', 'phiplus', 'ibm_osaka']
+Sample data for pub 0: {'11': 498, '00': 492, '01': 13, '10': 21}
+
+bin/qiskit_job_status.py cr499xz8091g008jnn80
+Status: JobStatus.DONE
+Backend: ibm_osaka
+Tags: ['homework12', 'bell', 'phiminus', 'ibm_osaka']
+Sample data for pub 0: {'11': 469, '01': 35, '00': 491, '10': 29}
+
+bin/qiskit_job_status.py cr49ba52yk500082p5f0
+Status: JobStatus.DONE
+Backend: ibm_osaka
+Tags: ['homework12', 'bell', 'psiplus', 'ibm_osaka']
+Sample data for pub 0: {'10': 424, '00': 84, '01': 447, '11': 69}
+
+bin/qiskit_job_status.py cr49c6g0dz600086nwk0
+Status: JobStatus.DONE
+Backend: ibm_osaka
+Tags: ['homework12', 'bell', 'psiminus', 'ibm_osaka']
+Sample data for pub 0: {'10': 391, '01': 398, '00': 147, '11': 88}
+\end{verbatim}
+
+The results are summarised in the table below, as proportions:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Bell state & $\ket{00}$ & $\ket{01}$ & $\ket{10}$ & $\ket{11}$ \\
+\hline
+$\ket{\Phi^{+}}$ & 48\% &  1\% &  2\% & 49\% \\
+$\ket{\Phi^{-}}$ & 48\% &  3\% &  3\% & 46\% \\
+$\ket{\Psi^{+}}$ &  8\% & 44\% & 41\% &  7\% \\
+$\ket{\Psi^{-}}$ & 14\% & 39\% & 38\% &  9\% \\
+\hline
+\end{tabular}
+\end{center}
+
+The results illustrate the presence of noise, because there are a significant number of counts for the states that should not be present.
+
+
+% And also these circuit images:
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.50\textwidth]{images/qiskit_phiplus.png}
+% \caption{Bell state $\ket{\Phi^{+}}$ on local simulator}
+% \end{figure}
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.50\textwidth]{images/qiskit_phiminus.png}
+% \caption{Bell state $\ket{\Phi^{-}}$ on local simulator}
+% \end{figure}
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.50\textwidth]{images/qiskit_psiplus.png}
+% \caption{Bell state $\ket{\Psi^{+}}$ on local simulator}
+% \end{figure}
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.50\textwidth]{images/qiskit_psiminus.png}
+% \caption{Bell state $\ket{\Psi^{-}}$ on local simulator}
+% \end{figure}
 
 \item We can compute $X_0$ and $X_1$ and the correlator as:
 \begin{align*}
@@ -169,8 +245,91 @@ We can compute $\langle \Phi^{+}|X_1X_0|\Phi^{+}\rangle$ as:
 & = 1
 \end{align*}
 
-(See the attached {\mathematica}
-notebook for the a check of this calculation.)
+The included Mathematica notebook Homework\_1+2\_Q1b\_CorrelationExpectation.nb verifies this analytic calculation.
+
+It also includes a simple quantum circuit to measure the correlator $\langle \Phi^{+}|X_1X_0|\Phi^{+}\rangle$.
+
+I also wrote a Python program using Qiskit Sampler feature to generate the circuit and simulate it.
+
+The circuit run by the program is shown below:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/xcorrelator_qiskit.png}
+\caption{Bell state $\ket{\Phi^{-}}$ with Qiskit}
+\end{figure}
+
+Running the program in simulation mode:
+
+\begin{verbatim}
+bin/homework12_q1b_qiskit.py --simulate
+00: 0.4717
+11: 0.5283
+\end{enumerate}
+
+This shows a clean result with perfect expectation of 1, as expected.
+
+I also ran the program on the IBM Quantum hardware, and the results are shown below:
+
+\begin{verbatim}
+bin/homework12_q1b_qiskit.py --run --pass-manager --filename=xcorrelator_qiskit_ibmquantum_full.png
+# ... wait for job to complete
+bin/qiskit_job_status.py cr6z43r95ey00083jtf0
+Status: JobStatus.DONE
+Backend: ibm_brisbane
+Tags: ['homework12', 'xcorrelator', 'ibm_brisbane']
+Sample data for pub 0: {'11': 504, '00': 454, '01': 45, '10': 21}
+\end{verbatim}
+
+The results are summarised in the table below, as proportions:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Bell state & $\ket{00}$ & $\ket{01}$ & $\ket{10}$ & $\ket{11}$ \\
+\hline
+$\ket{\Phi^{+}}$ & 44\% &  4\% &  2\% & 49\% \\
+\hline
+\end{tabular}
+\end{center}
+
+These results also show the presence of noise, with a significant number of counts for the states that should not be present.
+
+We can also do this experiment more simply in Qiskit using the Estimator feature instead of the Sampler feature.
+
+With the Estimator, we only need to do the circuit to prepare the input state, $\ket{\Phi^{+}}$:
+\begin{verbatim}
+circuit = QuantumCircuit(2)
+circuit.h(0)
+circuit.cx(0, 1)
+\end{verbatim}
+Then we can define the observable and run the experiment:
+\begin{verbatim}
+# Define observable as 1 * X_1 * X_0.
+observable = SparsePauliOp.from_list([("XX", 1)])
+\end{verbatim}
+
+My program can run this in the simulator:
+\begin{verbatim}
+bin/homework12_q1b_qiskit_estimator.py --simulate
+[1.]
+\end{verbatim}
+
+This again gives a perfect result of 1.0.
+
+I also ran the program on the IBM Quantum hardware, and the results are shown below:
+\begin{verbatim}
+bin/homework12_q1b_qiskit_estimator.py --run \
+  --filename=xcorrelator_qiskit_estimator_ibmquantum_full.png
+# ... wait for job to complete
+bin/qiskit_job_status.py crct7hpdjmqg008kemeg
+Status: JobStatus.DONE
+Backend: ibm_osaka
+Tags: None
+Estimate data for pub 0: [[1.0078125]]
+\end{verbatim}
+
+The result is 1.0078125, which is very close to the expected value of 1.0, but shows the presence of noise.
 
 \end{enumerate}
 
@@ -187,7 +346,7 @@ A & = Z\otimes \idone \quad ; & A' & = X\otimes \idone \\
 B & = \idone \otimes \istwo(X+Z) \quad ; & B' & = \idone \otimes \istwo(X-Z).
 \end{align*}
 
-\begin{enumerate}[(i)]
+\begin{enumerate}[(a)]
 \item Calculate analytically, using the matrix representation of the relevant quantum gates, the following correlators:
 \begin{equation}\label{eq:correlators}
 \langle \Psi^{-}|AB|\Psi^{-}\rangle, \quad \langle \Psi^{-}|AB' |\Psi^{-}\rangle , \quad \langle \Psi^{-}|A'B|\Psi^{-}\rangle, \quad \langle \Psi^{-}|A'B'|\Psi^{-}\rangle,
@@ -208,7 +367,124 @@ with $C$ given in Eq.~\eqref{eq:c}.
 \end{enumerate}
 }
 
-% \printbibliography
-% \addcontentsline{toc}{section}{References}
+\begin{enumerate}[(a)]
+\item
+The included Mathematica notebook Homework\_1+2\_Q2\_CHSH.nb calculates the correlators and the CHSH quantity $C$ analytically.
+
+It gives a result of $C = -2\sqrt{2}$, or $|C| = 2\sqrt{2}$, which violates the CHSH inequality.
+This is actually the maximum violation predicted by quantum mechanics, according to the Tsirelson bound.
+
+\item
+I spent a lot of time on this but I was unable to get a sensible conversion from the analytic calculation to a quantum circuit
+to compute the observables.
+I don't understand properly how to compute the expectation from the circuit output.
+
+The Mathematica notebook shows one of my attempts, but this circuit results in equal probabilities for all four states, which does not make sense and does not result in the correct expectation.
+
+I studied Nielsen and Chuang\cite{nielsen2016} ``EPR and the Bell inequality'', which has an example very similar to this problem.
+I also looked at the IBM tutorial\cite{ibm_chsh}, which uses a parameterized circuit that generalises this question and checks the inequality over a range of parameters.
+
+The books by Wong\cite{wong2022} and Silva\cite{silva2024} both contain extensive examples of a different variation of the CHSH inequality, using slightly more complex observables.
+Although they show the circuits and the computation of the expectation values in detail, I could not see how to relate the expectations back to the analytic versions.
+
+However, I was able to make some progress using the Estimator feature in Qiskit.
+(I found it by following the IBM tutorial.)
+
+The Estimator feature is a good way to compute the expectations required in this question,
+because it requires only the definition of a single circuit (for the input state only),
+and the Estimator takes care of the rest.
+
+The program is included in the submitted files, but the important parts are shown below.
+
+We prepare the entangled qubits in the state $\ket{\Psi^{-}}$:
+\begin{verbatim}
+chsh_circuit = QuantumCircuit(2)
+chsh_circuit.h(0)
+chsh_circuit.cx(0, 1)
+chsh_circuit.x(0)
+chsh_circuit.z(0)
+\end{verbatim}
+
+Then we define the observables that we are interested in:
+\begin{align*}
+AB & = Z_0 \times \frac{1}{\sqrt{2}} (X_1 + Z_1) = \frac{1}{\sqrt{2}} (X_1 Z_0 + Z_1 Z_0) \\
+AB' & = Z_0 \times \frac{1}{\sqrt{2}} (X_1 - Z_1) = \frac{1}{\sqrt{2}} (X_1 Z_0 - Z_1 Z_0) \\
+A'B & = X_0 \times \frac{1}{\sqrt{2}} (X_1 + Z_1) = \frac{1}{\sqrt{2}} (X_1 X_0 + Z_1 X_0) \\
+A'B' & = X_0 \times \frac{1}{\sqrt{2}} (X_1 - Z_1) = \frac{1}{\sqrt{2}} (X_1 X_0 - Z_1 X_0) \\
+C & = AB - AB' + A'B + A'B' \\
+& = \frac{1}{\sqrt{2}}(X_1 Z_0 + Z_1 Z_0) - \frac{1}{\sqrt{2}} (X_1 Z_0 - Z_1 Z_0) \\
+& \qquad + \frac{1}{\sqrt{2}} (X_1 X_0 + Z_1 X_0) + \frac{1}{\sqrt{2}} (X_1 X_0 - Z_1 X_0) \\
+& = \sqrt{2} Z_1 Z_0 + \sqrt{2} X_1 X_0 \\
+\end{align*}
+Technically it would be sufficient to define only $C$, but I've included the others as required by the question and to show more detail.
+\begin{small}
+\begin{verbatim}
+observable_ab =
+    SparsePauliOp.from_list([("XZ", 1/sqrt(2)), ("ZZ", 1/sqrt(2))])
+observable_abp =
+    SparsePauliOp.from_list([("XZ", 1/sqrt(2)), ("ZZ", -1/sqrt(2))])
+observable_apb =
+    SparsePauliOp.from_list([("XX", 1/sqrt(2)), ("ZX", 1/sqrt(2))])
+observable_apbp =
+    SparsePauliOp.from_list([("XX", 1/sqrt(2)), ("ZX", -1/sqrt(2))])
+observable_c =
+    SparsePauliOp.from_list([("ZZ", sqrt(2)), ("XX", sqrt(2))])
+\end{verbatim}
+\end{small}
+
+\item
+
+We run the circuit using the Qiskit simulator, and evaluate the expectation values:
+
+\begin{verbatim}
+bin/homework12_q2_qiskit_estimator.py --simulate
+[-0.70710678  0.70710678 -0.70710678 -0.70710678 -2.82842712]
+\end{verbatim}
+
+These results agree perfectly with the analytic results:
+
+\begin{align*}
+\langle \Psi^{-}|AB|\Psi^{-}\rangle & = -\frac{1}{\sqrt{2}} \\
+\langle \Psi^{-}|AB'|\Psi^{-}\rangle & = \frac{1}{\sqrt{2}} \\
+\langle \Psi^{-}|A'B|\Psi^{-}\rangle & = -\frac{1}{\sqrt{2}} \\
+\langle \Psi^{-}|A'B'|\Psi^{-}\rangle & = -\frac{1}{\sqrt{2}} \\
+C & = -2\sqrt{2}
+\end{align*}
+
+\item
+
+We can also run this on the IBM Quantum hardware:
+
+\begin{small}
+\begin{verbatim}
+bin/homework12_q2_qiskit_estimator.py --run \
+    --filename=chsh_qiskit_estimator_ibmquantum_full.png
+# ... wait for job to complete
+bin/qiskit_job_status.py crcwnppdqdn000834ksg
+Status: JobStatus.DONE
+Backend: ibm_osaka
+Tags: ['homework12', 'chsh', 'ibm_osaka']
+Estimate data for pub 0: [[-0.65312916  0.77907694 -0.73409559
+  -0.7376941  -2.90399579]]
+\end{verbatim}
+\end{small}
+
+The numbers are similar to the simulator results, but again show the presence of noise in the IBM Quantum system.
+
+\item
+
+Interestingly, the result from the IBM Quantum system has $|C|=2.90$, which is actually greater than
+the $2\sqrt{2}\approx 2.83$ maximum violation predicted by quantum mechanics.
+
+According to theory, a result greater than 2 implies that the system is not compatible with a local hidden variable theory.
+However, given the obvious noise issues, I am not sure what level of confidence we can assign to this result.
+Although the deviation is large (larger even than quantum mechanics predicted!), our experiments on IBM Quantum
+have displayed a large amount of unexpected results due to noise.
+I'm not sure we can apply any formal statistical analysis to this result, without accounting for the statistical properties of the noise.
+
+\end{enumerate}
+
+\printbibliography
+\addcontentsline{toc}{section}{References}
 
 \end{document}
