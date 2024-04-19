@@ -86,7 +86,7 @@ I wrote Python programs using both IBM's Qiskit and Google's Cirq libraries to g
 The programs are included in the submitted files.
 
 The output of the Qiskit program is:
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q1a_qiskit.py --simulate --state=phiplus
 00: 0.4893
 11: 0.5107
@@ -99,12 +99,12 @@ bin/homework12_q1a_qiskit.py --simulate --state=psiplus
 bin/homework12_q1a_qiskit.py --simulate --state=psiminus
 01: 0.5029
 10: 0.4971
-\end{verbatim}
+\end{lstlisting}
 
 % Circ program output omitted because of Unicode
 
 % The output of the Circ program is:
-% \begin{verbatim}
+% \begin{lstlisting}[language=bash]
 % bin/homework12_q1a_cirq.py --phiplus
 % 0: ───H───@───
 %           │
@@ -152,7 +152,7 @@ bin/homework12_q1a_qiskit.py --simulate --state=psiminus
 
 % phase:
 % output vector: |⟩
-% \end{verbatim}
+% \end{lstlisting}
 
 The Qiskit version of the program also supports running on the real IBM Quantum hardware, using the Qiskit \texttt{Sampler} feature.
 This includes a transpilation step to convert the circuit to use only the available gates.
@@ -161,7 +161,7 @@ Because the transpiled circuits include a very large number of ancilla bits, I h
 I've included the images in the submitted files.
 
 Once the jobs are completed, I queried the results:
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/qiskit_job_status.py cr48fcd0dz600086ntg0
 Status: JobStatus.DONE
 Backend: ibm_osaka
@@ -185,7 +185,7 @@ Status: JobStatus.DONE
 Backend: ibm_osaka
 Tags: ['homework12', 'bell', 'psiminus', 'ibm_osaka']
 Sample data for pub 0: {'10': 391, '01': 398, '00': 147, '11': 88}
-\end{verbatim}
+\end{lstlisting}
 
 The results are summarised in the table below, as proportions:
 \begin{center}
@@ -261,17 +261,17 @@ The circuit run by the program is shown below:
 
 Running the program in simulation mode:
 
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q1b_qiskit.py --simulate
 00: 0.4717
 11: 0.5283
-\end{enumerate}
+\end{lstlisting}
 
 This shows a clean result with perfect expectation of 1, as expected.
 
 I also ran the program on the IBM Quantum hardware, and the results are shown below:
 
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q1b_qiskit.py --run --pass-manager --filename=xcorrelator_qiskit_ibmquantum_full.png
 # ... wait for job to complete
 bin/qiskit_job_status.py cr6z43r95ey00083jtf0
@@ -279,7 +279,7 @@ Status: JobStatus.DONE
 Backend: ibm_brisbane
 Tags: ['homework12', 'xcorrelator', 'ibm_brisbane']
 Sample data for pub 0: {'11': 504, '00': 454, '01': 45, '10': 21}
-\end{verbatim}
+\end{lstlisting}
 
 The results are summarised in the table below, as proportions:
 
@@ -298,27 +298,27 @@ These results also show the presence of noise, with a significant number of coun
 We can also do this experiment more simply in Qiskit using the Estimator feature instead of the Sampler feature.
 
 With the Estimator, we only need to do the circuit to prepare the input state, $\ket{\Phi^{+}}$:
-\begin{verbatim}
+\begin{lstlisting}[language=python]
 circuit = QuantumCircuit(2)
 circuit.h(0)
 circuit.cx(0, 1)
-\end{verbatim}
+\end{lstlisting}
 Then we can define the observable and run the experiment:
-\begin{verbatim}
+\begin{lstlisting}[language=python]
 # Define observable as 1 * X_1 * X_0.
 observable = SparsePauliOp.from_list([("XX", 1)])
-\end{verbatim}
+\end{lstlisting}
 
 My program can run this in the simulator:
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q1b_qiskit_estimator.py --simulate
 [1.]
-\end{verbatim}
+\end{lstlisting}
 
 This again gives a perfect result of 1.0.
 
 I also ran the program on the IBM Quantum hardware, and the results are shown below:
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q1b_qiskit_estimator.py --run \
   --filename=xcorrelator_qiskit_estimator_ibmquantum_full.png
 # ... wait for job to complete
@@ -327,7 +327,7 @@ Status: JobStatus.DONE
 Backend: ibm_osaka
 Tags: None
 Estimate data for pub 0: [[1.0078125]]
-\end{verbatim}
+\end{lstlisting}
 
 The result is 1.0078125, which is very close to the expected value of 1.0, but shows the presence of noise.
 
@@ -397,13 +397,13 @@ and the Estimator takes care of the rest.
 The program is included in the submitted files, but the important parts are shown below.
 
 We prepare the entangled qubits in the state $\ket{\Psi^{-}}$:
-\begin{verbatim}
+\begin{lstlisting}[language=python]
 chsh_circuit = QuantumCircuit(2)
 chsh_circuit.h(0)
 chsh_circuit.cx(0, 1)
 chsh_circuit.x(0)
 chsh_circuit.z(0)
-\end{verbatim}
+\end{lstlisting}
 
 Then we define the observables that we are interested in:
 \begin{align*}
@@ -418,7 +418,7 @@ C & = AB - AB' + A'B + A'B' \\
 \end{align*}
 Technically it would be sufficient to define only $C$, but I've included the others as required by the question and to show more detail.
 \begin{small}
-\begin{verbatim}
+\begin{lstlisting}[language=python]
 observable_ab =
     SparsePauliOp.from_list([("XZ", 1/sqrt(2)), ("ZZ", 1/sqrt(2))])
 observable_abp =
@@ -429,17 +429,17 @@ observable_apbp =
     SparsePauliOp.from_list([("XX", 1/sqrt(2)), ("ZX", -1/sqrt(2))])
 observable_c =
     SparsePauliOp.from_list([("ZZ", sqrt(2)), ("XX", sqrt(2))])
-\end{verbatim}
+\end{lstlisting}
 \end{small}
 
 \item
 
 We run the circuit using the Qiskit simulator, and evaluate the expectation values:
 
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q2_qiskit_estimator.py --simulate
 [-0.70710678  0.70710678 -0.70710678 -0.70710678 -2.82842712]
-\end{verbatim}
+\end{lstlisting}
 
 These results agree perfectly with the analytic results:
 
@@ -456,7 +456,7 @@ C & = -2\sqrt{2}
 We can also run this on the IBM Quantum hardware:
 
 \begin{small}
-\begin{verbatim}
+\begin{lstlisting}[language=bash]
 bin/homework12_q2_qiskit_estimator.py --run \
     --filename=chsh_qiskit_estimator_ibmquantum_full.png
 # ... wait for job to complete
@@ -466,7 +466,7 @@ Backend: ibm_osaka
 Tags: ['homework12', 'chsh', 'ibm_osaka']
 Estimate data for pub 0: [[-0.65312916  0.77907694 -0.73409559
   -0.7376941  -2.90399579]]
-\end{verbatim}
+\end{lstlisting}
 \end{small}
 
 The numbers are similar to the simulator results, but again show the presence of noise in the IBM Quantum system.
