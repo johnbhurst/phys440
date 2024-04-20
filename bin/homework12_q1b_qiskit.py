@@ -29,15 +29,15 @@ if (args.format is not None and args.format != 'mpl' and args.format != 'latex')
     exit(1)
 
 # Build the circuit
-qreg_q = QuantumRegister(2, 'q')
-creg_c = ClassicalRegister(2, 'c')
-circuit = QuantumCircuit(qreg_q, creg_c)
-circuit.h(qreg_q[0])
-circuit.cx(qreg_q[0], qreg_q[1])
-circuit.x(qreg_q[0])
-circuit.x(qreg_q[1])
-circuit.measure(qreg_q[0], creg_c[0])
-circuit.measure(qreg_q[1], creg_c[1])
+q = QuantumRegister(2, 'q')
+c = ClassicalRegister(2, 'c')
+circuit = QuantumCircuit(q, c)
+circuit.h(q[0])
+circuit.cx(q[0], q[1])
+circuit.h(q[0])
+circuit.h(q[1])
+circuit.measure(q[0], c[0])
+circuit.measure(q[1], c[1])
 
 # Run the circuit in the local simulator if requested
 if args.simulate:
