@@ -5,8 +5,20 @@
 \author{John Hurst}
 \date{April 2024}
 
+\hyphenation{trans-pi-la-tion}
 \begin{document}
 \maketitle
+
+\begin{center}
+\noindent\fbox{%
+\parbox{0.95\textwidth}{%
+Note: As far as I can tell, it is currently not possible to run most circuits created in the IBM Quantum Composer directly on IBM Quantum hardware,
+because the Quantum Composer does not support automatic transpilation.
+For this reason, I ran all my circuits using Python Qiskit programs, where it is possible to transpile the circuits.
+I've included the programs, and images of the original circuits and the transpiled circuits in the submitted files.
+}
+}
+\end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{1}{Bell-state realization and correlation measurement on \textit{IBM Quantum} (12 marks)
@@ -59,7 +71,7 @@ These two simple examples are perhaps the simplest circuits for $\ket{\Phi^{-}}$
 \end{figure}
 
 I ran simple circuits for all four Bell states in the IBM Quantum simulator using the web circuit composer.
-The screen shots are included in the submitted files, and the ones for $\ket{\Phi^{-}}$ and $\ket{\Psi^{-}}$ are shown above.
+The screen shots are included in the submitted files, and the ones for $\ket{\Phi^{-}}$ and $\ket{\Psi^{-}}$ are shown below.
 
 \begin{figure}[H]
 \centering
@@ -262,9 +274,9 @@ The circuit run by the program is shown below:
 Running the program in simulation mode:
 
 \begin{lstlisting}[language=bash]
-bin/homework12_q1b_qiskit.py --simulate
-00: 0.4717
-11: 0.5283
+bin/homework12_q1b_qiskit.py --simulate --filename=xcorrelator_qiskit.png
+00: 0.4746
+11: 0.5254
 \end{lstlisting}
 
 This shows a clean result with perfect expectation of 1, as expected.
@@ -286,9 +298,9 @@ The results are summarised in the table below, as proportions:
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Bell state & $\ket{00}$ & $\ket{01}$ & $\ket{10}$ & $\ket{11}$ \\
+State vector & $\ket{00}$ & $\ket{01}$ & $\ket{10}$ & $\ket{11}$ \\
 \hline
-$\ket{\Phi^{+}}$ & 44\% &  4\% &  2\% & 49\% \\
+Frequency & 44\% &  4\% &  2\% & 49\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -375,25 +387,112 @@ It gives a result of $C = -2\sqrt{2}$, or $|C| = 2\sqrt{2}$, which violates the 
 This is actually the maximum violation predicted by quantum mechanics, according to the Tsirelson bound.
 
 \item
-I spent a lot of time on this but I was unable to get a sensible conversion from the analytic calculation to a quantum circuit
-to compute the observables.
-I don't understand properly how to compute the expectation from the circuit output.
+I used the four circuits shown below.
+Each circuit prepares the input state of $\ket{\Psi^{-}}$ and then performs the necessary transformation of the quantum state into the computational (Z) basis to perform the measurement of the desired observable.
 
-The Mathematica notebook shows one of my attempts, but this circuit results in equal probabilities for all four states, which does not make sense and does not result in the correct expectation.
+\begin{itemize}
+\item To measure $A=Z_0$ requires no transformation, because $Z_0$ is already in the computational basis.
+\item To measure $A'=X_0$ requires a Hadamard gate on qubit 0 before the measurement.
+\item To measure $B=\frac{1}{\sqrt{2}}(X_1 + Z_1)$ requires a $Y$ rotation of $-\frac{\pi}{4}$, achieved by the RY($-\frac{\pi}{4}$) gate.
+\item I was not completely sure about the transformation required to measure $B'=\frac{1}{\sqrt{2}}(X_1 - Z_1)$, but it appears that
+RY($-\frac{\pi}{4}$) followed by a Hadamard gate is the correct transformation.
+\end{itemize}
 
-I studied Nielsen and Chuang\cite{nielsen2016} ``EPR and the Bell inequality'', which has an example very similar to this problem.
-I also looked at the IBM tutorial\cite{ibm_chsh}, which uses a parameterized circuit that generalises this question and checks the inequality over a range of parameters.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/chsh_ab_qiskit.png}
+\caption{Circuit for measuring $\langle \Psi^{-}|AB|\Psi^{-}\rangle$}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/chsh_abp_qiskit.png}
+\caption{Circuit for measuring $\langle \Psi^{-}|AB'|\Psi^{-}\rangle$}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/chsh_apb_qiskit.png}
+\caption{Circuit for measuring $\langle \Psi^{-}|A'B|\Psi^{-}\rangle$}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/chsh_apbp_qiskit.png}
+\caption{Circuit for measuring $\langle \Psi^{-}|A'B'|\Psi^{-}\rangle$}
+\end{figure}
 
-The books by Wong\cite{wong2022} and Silva\cite{silva2024} both contain extensive examples of a different variation of the CHSH inequality, using slightly more complex observables.
-Although they show the circuits and the computation of the expectation values in detail, I could not see how to relate the expectations back to the analytic versions.
+The Mathematica notebook referenced above also evaluates the expectations for the observables using these circuits,
+and shows that the circuits give the same result as the analytic calculation.
 
-However, I was able to make some progress using the Estimator feature in Qiskit.
-(I found it by following the IBM tutorial.)
+\item
 
-The Estimator feature is a good way to compute the expectations required in this question,
+I wrote a Python program using the Qiskit Sampler feature to generate the circuits and simulate them.
+
+The program runs the circuits and prints the statevector frequency proportions:
+
+\begin{lstlisting}[language=bash]
+bin/homework12_q2_qiskit.py --obs=ab --simulate
+00: 0.0811
+01: 0.4160
+10: 0.4336
+11: 0.0693
+bin/homework12_q2_qiskit.py --obs=abp --simulate
+00: 0.4326
+01: 0.0684
+10: 0.0742
+11: 0.4248
+bin/homework12_q2_qiskit.py --obs=apb --simulate
+00: 0.0723
+01: 0.4336
+10: 0.4219
+11: 0.0723
+bin/homework12_q2_qiskit.py --obs=apbp --simulate
+00: 0.0654
+01: 0.4287
+10: 0.4355
+11: 0.0703
+\end{lstlisting}
+
+We use these proportions to calculate the expectation values for the observables using
+\[
+\langle AB \rangle = P_{00} - P_{01} - P_{10} + P_{11}
+\]
+as shown in this table:
+
+\begin{center}
+\begin{tabular}{|c|r|r|r|r|r|}
+\hline
+Observable & $P_{00}$ & $P_{01}$ & $P_{10}$ & $P_{11}$ & $P_{00} - P_{01} - P_{10} + P_{11}$ \\
+\hline
+AB   & 0.0811 & 0.4160 & 0.4336 & 0.0693 & -0.6992 \\
+AB'  & 0.4326 & 0.0684 & 0.0742 & 0.4248 &  0.7148 \\
+A'B  & 0.0723 & 0.4336 & 0.4219 & 0.0723 & -0.7109 \\
+A'B' & 0.0654 & 0.4287 & 0.4355 & 0.0703 & -0.7285 \\
+\hline
+\end{tabular}
+\end{center}
+
+The CHSH quantity $C$ is then calculated as:
+\begin{align*}
+C & = \langle AB \rangle - \langle AB' \rangle + \langle A'B \rangle + \langle A'B' \rangle \\
+& = -0.6992 - 0.7148 - 0.7109 - 0.7285 \\
+& = -2.8534
+\end{align*}
+
+This result is close to the analytic result of $-2\sqrt{2} \approx -2.8284$.
+
+% I studied Nielsen and Chuang\cite{nielsen2016} ``EPR and the Bell inequality'', which has an example very similar to this problem.
+% I also looked at the IBM tutorial\cite{ibm_chsh}, which uses a parameterized circuit that generalises this question and checks the inequality over a range of parameters.
+
+% The books by Wong\cite{wong2022} and Silva\cite{silva2024} both contain extensive examples of a different variation of the CHSH inequality, using slightly more complex observables.
+% Although they show the circuits and the computation of the expectation values in detail, I could not see how to relate the expectations back to the analytic versions.
+
+% However, I was able to make some progress using the Estimator feature in Qiskit.
+% (I found it by following the IBM tutorial.)
+
+The Qiskit Estimator feature is a simpler way to compute the expectations required in this question,
 because it requires only the definition of a single circuit (for the input state only),
 and the Estimator takes care of the rest.
 
+I wrote a separate Python program to use the Estimator feature to compute the expectations.
 The program is included in the submitted files, but the important parts are shown below.
 
 We prepare the entangled qubits in the state $\ket{\Psi^{-}}$:
@@ -432,8 +531,6 @@ observable_c =
 \end{lstlisting}
 \end{small}
 
-\item
-
 We run the circuit using the Qiskit simulator, and evaluate the expectation values:
 
 \begin{lstlisting}[language=bash]
@@ -453,7 +550,90 @@ C & = -2\sqrt{2}
 
 \item
 
-We can also run this on the IBM Quantum hardware:
+I ran the individual circuits using the Sampler feature on IBM Quantum hardware.
+The transpiled circuit diagrams are included in the submitted files.
+
+The first run generated these counts:
+
+\begin{center}
+\begin{tabular}{|c|c|r|r|r|r|}
+\hline
+Observable & Backend & $\ket{00}$ & $\ket{01}$ & $\ket{10}$ & $\ket{11}$  \\
+\hline
+AB   & ibm\_kyoto & 178 & 306 & 304 & 236 \\
+AB'  & ibm\_kyoto & 307 & 170 & 158 & 389 \\
+A'B  & ibm\_osaka & 115 & 412 & 413 &  84 \\
+A'B' & ibm\_osaka & 119 & 414 & 403 &  88 \\
+\hline
+\end{tabular}
+\end{center}
+
+We convert these counts to proportions and calculate the expectation values:
+
+\begin{center}
+\begin{tabular}{|c|r|r|r|r|r|}
+\hline
+Observable & $P_{00}$ & $P_{01}$ & $P_{10}$ & $P_{11}$ & $P_{00} - P_{01} - P_{10} + P_{11}$ \\
+\hline
+AB   & 0.1738 & 0.2988 & 0.2969 & 0.2305 & -0.1914 \\
+AB'  & 0.2998 & 0.1660 & 0.1543 & 0.3799 &  0.3594 \\
+A'B  & 0.1123 & 0.4023 & 0.4033 & 0.0820 & -0.6113 \\
+A'B' & 0.1162 & 0.4043 & 0.3936 & 0.0859 & -0.5957 \\
+\hline
+\end{tabular}
+\end{center}
+
+The CHSH quantity $C$ is then calculated as:
+\begin{align*}
+C & = \langle AB \rangle - \langle AB' \rangle + \langle A'B \rangle + \langle A'B' \rangle \\
+& = -0.1914 - 0.3594 - 0.6113 - 0.5957 \\
+& = -1.7578
+\end{align*}
+
+So, from this experiment we get $|C|<2$, which does not violate the CHSH inequality.
+However, this result might have been affected by noise in the IBM Quantum systems.
+I ran the same circuits a second time, and happened to get them run on a different combination of IBM Quantum backends:
+
+\begin{center}
+\begin{tabular}{|c|c|r|r|r|r|}
+\hline
+Observable & Backend & $\ket{00}$ & $\ket{01}$ & $\ket{10}$ & $\ket{11}$  \\
+\hline
+AB   & ibm\_osaka & 118 & 399 & 427 &  80 \\
+AB'  & ibm\_osaka & 434 &  98 &  98 & 394 \\
+A'B  & ibm\_osaka &  98 & 425 & 423 &  78 \\
+A'B' & ibm\_kyoto & 151 & 343 & 345 & 185 \\
+\hline
+\end{tabular}
+\end{center}
+
+This time the proportions were more consistent with the analytic and simulator results:
+
+\begin{center}
+\begin{tabular}{|c|r|r|r|r|r|}
+\hline
+Observable & $P_{00}$ & $P_{01}$ & $P_{10}$ & $P_{11}$ & $P_{00} - P_{01} - P_{10} + P_{11}$ \\
+\hline
+AB   & 0.1152 & 0.3896 & 0.4170 & 0.0781 & -0.6133 \\
+AB'  & 0.4238 & 0.0957 & 0.0957 & 0.3848 &  0.6172 \\
+A'B  & 0.0957 & 0.4150 & 0.4131 & 0.0762 & -0.6563 \\
+A'B' & 0.1475 & 0.3350 & 0.3369 & 0.1807 & -0.3438 \\
+\hline
+\end{tabular}
+\end{center}
+
+Now, the CHSH quantity $C$ is calculated as:
+\begin{align*}
+C & = -0.6133 - 0.6172 - 0.6563 - 0.3438 \\
+& = -2.2306
+\end{align*}
+
+This result does violate the CHSH inequality, but it is still less than the maximum violation predicted by quantum mechanics.
+
+It appears that the ibm\_koyoto backend did not give very good results for these circuits at the time I ran them,
+while the ibm\_osaka backend gave more consistent results.
+
+I also ran the Estimator version of the program on the IBM Quantum hardware:
 
 \begin{small}
 \begin{lstlisting}[language=bash]
@@ -473,7 +653,7 @@ The numbers are similar to the simulator results, but again show the presence of
 
 \item
 
-Interestingly, the result from the IBM Quantum system has $|C|=2.90$, which is actually greater than
+Interestingly, the result from the IBM Quantum system using the Estimator has $|C|=2.90$, which is actually greater than
 the $2\sqrt{2}\approx 2.83$ maximum violation predicted by quantum mechanics.
 
 According to theory, a result greater than 2 implies that the system is not compatible with a local hidden variable theory.
@@ -484,7 +664,7 @@ I'm not sure we can apply any formal statistical analysis to this result, withou
 
 \end{enumerate}
 
-\printbibliography
-\addcontentsline{toc}{section}{References}
+% \printbibliography
+% \addcontentsline{toc}{section}{References}
 
 \end{document}
