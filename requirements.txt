@@ -123,6 +123,7 @@ PyYAML==6.0.1
 pyzmq==25.1.2
 qcs-api-client==0.21.6
 qiskit==1.0.1
+qiskit-aer==0.14.0.1
 qiskit-ibm-runtime==0.22.0
 qtconsole==5.5.1
 QtPy==2.4.1
