@@ -495,7 +495,7 @@ and the Estimator takes care of the rest.
 I wrote a separate Python program to use the Estimator feature to compute the expectations.
 The program is included in the submitted files, but the important parts are shown below.
 
-We prepare the entangled qubits in the state $\ket{\Psi^{-}}$:
+We prepare the qubits in the entangled state $\ket{\Psi^{-}}$:
 \begin{lstlisting}[language=python]
 chsh_circuit = QuantumCircuit(2)
 chsh_circuit.h(0)
@@ -516,6 +516,8 @@ C & = AB - AB' + A'B + A'B' \\
 & = \sqrt{2} Z_1 Z_0 + \sqrt{2} X_1 X_0 \\
 \end{align*}
 Technically it would be sufficient to define only $C$, but I've included the others as required by the question and to show more detail.
+
+The Python code to define these observables is:
 \begin{small}
 \begin{lstlisting}[language=python]
 observable_ab =
@@ -658,11 +660,32 @@ the $2\sqrt{2}\approx 2.83$ maximum violation predicted by quantum mechanics.
 
 According to theory, a result greater than 2 implies that the system is not compatible with a local hidden variable theory.
 However, given the obvious noise issues, I am not sure what level of confidence we can assign to this result.
-Although the deviation is large (larger even than quantum mechanics predicted!), our experiments on IBM Quantum
+Although the deviation is large (in the Estimator case larger even than quantum mechanics predicted!), our experiments on IBM Quantum
 have displayed a large amount of unexpected results due to noise.
 I'm not sure we can apply any formal statistical analysis to this result, without accounting for the statistical properties of the noise.
 
 \end{enumerate}
+
+I was interested in the noise effect from the different IBM Quantum systems, and the fact that the ibm\_osaka backend results are more consistent with theory than those of the ibm\_kyoto backend.
+It turns out that Qiskit supports simulation using noise models for the IBM Quantum systems, based on the calibration data that IBM provides.
+There are two ways to use this feature: we can use static \texttt{FakeKyoto} and \texttt{FakeOsaka} backends, which are pre-calibrated noise models
+based on data from some time in the past, or we can use the latest calibration results via the \texttt{AerSimulator} class.
+
+I thought it would be interesting to run a large number of trials and compare the distributions for the estimate of $C$ from the different backends.
+
+I tried with the \texttt{AerSimulator} class, but it was very slow, I guess because of needing to collect live data from the IBM Quantum backends.
+So I decided to use the \texttt{FakeKyoto} and \texttt{FakeOsaka} backends.
+I ran 100 trials for each backend, each time estimating the observables $\langle AB\rangle$, $\langle AB'\rangle$, $\langle A'B\rangle$, $\langle A'B'\rangle$ and $C$.
+I then plotted histograms of the results, shown below:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/chsh_fakenoise_distributions.png}
+\caption{Distributions of the estimate of $C$}
+\end{figure}
+
+This graph shows a pretty bad result for the ibm\_kyoto backend.
+It would be interesting to know whether the current calibration results give as bad a result,
+but in my own CHSH runs I did see that the ibm\_kyoto backend gave considerably worse results than the ibm\_osaka backend.
 
 % \printbibliography
 % \addcontentsline{toc}{section}{References}
