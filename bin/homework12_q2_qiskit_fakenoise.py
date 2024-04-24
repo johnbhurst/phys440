@@ -10,14 +10,14 @@ from qiskit import ClassicalRegister, QuantumCircuit, QuantumRegister
 from qiskit import transpile
 from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
-from qiskit_ibm_runtime.fake_provider import FakeManilaV2, FakeKyoto, FakeOsaka
+from qiskit_ibm_runtime.fake_provider import FakeProviderForBackendV2
 from qiskit_ibm_runtime.options import EnvironmentOptions, SamplerOptions
 from qiskit.primitives import BackendSampler
 from qiskit.providers.basic_provider import BasicProvider
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 
 parser = argparse.ArgumentParser(description='Homework 12 Q2: Noise from Qiskit fake providers.')
-parser.add_argument('--provider', type=str, default='Simulator', help='Provider (Simulator, FakeManila, FakeKyoto, FakeOsaka), (default Simulator)')
+parser.add_argument('--provider', type=str, default='basic_simulator', help='Provider (basic_simulator, fake_manila, fake_kyoto, etc), (default basic_simulator)')
 parser.add_argument('--runs', type=int, default=1, help='Number of runs (default 1)')
 args = parser.parse_args()
 
@@ -55,18 +55,12 @@ def get_circuit(obs):
     circuit.measure(q[1], c[1])
     return circuit
 
-def get_backend(backend):
-    if backend == 'Simulator':
+def get_backend(backend_name):
+    if backend_name == 'basic_simulator':
         return BasicProvider().get_backend('basic_simulator')
-    elif backend == 'FakeManila':
-        return FakeManilaV2()
-    elif backend == 'FakeKyoto':
-        return FakeKyoto()
-    elif backend == 'FakeOsaka':
-        return FakeOsaka()
     else:
-        print("Provider must be one of Simulator, FakeManila, FakeKyoto, FakeOsaka")
-        exit(1)
+        backends = FakeProviderForBackendV2().backends()
+        return next(iter([backend for backend in backends if backend.name == backend_name]), None)
 
 def run(obs, backend):
     circuit = get_circuit(obs)
@@ -84,6 +78,9 @@ def run(obs, backend):
     return p00 - p01 - p10 + p11
 
 backend = get_backend(args.provider)
+if not backend:
+    print("Provider must be one of basic_simulator, fake_manila, fake_kyoto, fake_osaka etc")
+    exit(1)
 
 for i in range(args.runs):
     ab = run('ab', backend)
