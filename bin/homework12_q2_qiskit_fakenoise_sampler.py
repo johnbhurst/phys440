@@ -16,7 +16,7 @@ from qiskit.primitives import BackendSampler
 from qiskit.providers.basic_provider import BasicProvider
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 
-parser = argparse.ArgumentParser(description='Homework 12 Q2: Noise from Qiskit fake providers.')
+parser = argparse.ArgumentParser(description='Homework 12 Q2: Noise from Qiskit fake providers (using Sampler).')
 parser.add_argument('--provider', type=str, default='basic_simulator', help='Provider (basic_simulator, fake_manila, fake_kyoto, etc), (default basic_simulator)')
 parser.add_argument('--runs', type=int, default=1, help='Number of runs (default 1)')
 args = parser.parse_args()
