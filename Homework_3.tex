@@ -1,0 +1,71 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys440}
+
+\title{PHYS440 - Homework 3}
+\author{John Hurst}
+\date{May 2024}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\noindent\fbox{%
+\parbox{0.95\textwidth}{%
+Note: As far as I can tell, it is currently not possible to run most circuits created in the IBM Quantum Composer directly on IBM Quantum hardware,
+because the Quantum Composer does not support automatic transpilation.
+For this reason, I ran all my circuits using Python Qiskit programs, where it is possible to transpile the circuits.
+I've included the programs, and images of the original circuits and the transpiled circuits in the submitted files.
+}
+}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{1}{Quantum teleportation (10 marks)
+
+Quantum teleportation refers to the ability to transfer a general quantum state $\ket\psi$ between two spatially-separated observers (Alice and Bob) that have previously shared the members of an entangled-qubit pair.
+\begin{enumerate}[(a)]
+\item Remind yourself how you can create any given qubit state $\ket\psi$ via a unitary transformation $\hat{U}(\theta,\phi)$ acting on $\ket{0}$,
+with $\hat{U}(\theta,\phi)$ begin composed of two suitable successive rotations by angles $\theta$ and $\phi$:
+\[
+\ket{\psi} = \hat{U}(\theta,\phi)\ket{0}
+\]
+Design a circuit to implement $\ket{\psi}$ for a given set of values for $\theta$ and $\phi$.
+\item Implement a quantum-teleportation circuit that has $\ket{\psi}$ from part (a) above as input and also includes a diagnostic to verify that the state $\ket{\psi}$ has indeed been faithfully teleported.
+Run the circuit for a representative set of states $\ket{\psi}$ (i.e. angles $\theta$ and $\phi$).
+Discuss the quality and magnitude of any observed errors/deviations.
+\end{enumerate}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{2}{Phase estimation: Example implementation (10 marks)
+
+Implement the phase-estimation circuit to find the eigenvalue associated with eigenvector
+\[
+\ket{u} = \frac{1}{\sqrt{2}}\left(\ket{0} - i\ket{1}\right)
+\]
+of the unitary matrix
+\[
+\hat{U}_Y = \begin{pmatrix}
+    1 & -i \\
+    i & 1
+\end{pmatrix}
+\]
+(\textit{Hint}: Two-bit precision will be enough for the purpose of this task!)
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\question{3}{Application: Quantum computational chemistry (5 bonus marks)
+
+Inform yourself about the application of quantum algorithms (especially phase estimation)
+in the context of quantum simulation of physical systems, especially quantum chemistry.
+Use and resources at your disposal.
+[A useful starting point could be reading some parts of the article S. McArdle et al.\cite{mcardle2020}]
+Write a short summary (between $\frac{1}{2}$ and 1 page), discussing the main algorithmic ingredients and the quantum advantage.
+}
+
+\printbibliography
+\addcontentsline{toc}{section}{References}
+
+
+\end{document}
