@@ -67,4 +67,4 @@ counts = result[0].data.c0.get_counts()
 count0 = counts.get("000", 0) + counts.get("001", 0) + counts.get("010", 0) + counts.get("011", 0)
 count1 = counts.get("100", 0) + counts.get("101", 0) + counts.get("110", 0) + counts.get("111", 0)
 
-print(count0, count1)
+print(f"{{0: {count0}, 1: {count1}}}")
