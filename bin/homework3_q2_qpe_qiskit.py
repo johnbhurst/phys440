@@ -16,6 +16,7 @@ from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 from qiskit.quantum_info import Operator
 
 parser = argparse.ArgumentParser(description='PHYS440 Homework 3 Q2: Quantum Phase Estimation.')
+parser.add_argument("--operator", type=str, default="Z", help="Operator (X, Y, Z), (default Z)")
 parser.add_argument("--eigenvector", type=str, default="1", help="Eigenvector (0, 1), (default 1)")
 parser.add_argument("--provider", type=str, default="aer", help="Provider (aer, fake_manila, fake_kyoto, etc), (default aer)")
 parser.add_argument("--shots", type=int, default=1024, help="Number of shots")
@@ -30,17 +31,34 @@ circuit = QuantumCircuit(qubits, clbits)
 (c0, c1, c2) = clbits
 
 # Setup:
-if args.eigenvector == "1":
-    circuit.x(q0)
+if args.operator == "Z":
+    if args.eigenvector == "1":
+        circuit.x(q0)
+elif args.operator == "X":
+    raise NotImplementedError("X operator not implemented")
+elif args.operator == "Y":
+    if args.eigenvector == "0":
+        circuit.rx(math.pi/2, q0)
+    else:
+        circuit.rx(-math.pi/2, q0)
+else:
+    raise ValueError("Invalid operator: Must be X, Y, or Z")
 circuit.h(q1)
 circuit.h(q2)
-circuit.cz(q1, q0)
+if args.operator == "Z":
+    circuit.cz(q1, q0)
+elif args.operator == "X":
+    circuit.cx(q1, q0)
+elif args.operator == "Y":
+    circuit.cy(q1, q0)
+else:
+    raise ValueError("Invalid operator: Must be X, Y, or Z")
 
 # 2-qubit QFT:
 circuit.h(q2)
 circuit.cp(-math.pi/2, q1, q2)
 circuit.h(q1)
-circuit.swap(q1, q2)
+# circuit.swap(q1, q2) #TODO: swap to get qubit ordering that makes results easier to interpret
 
 # measure:
 circuit.measure(q1, c1)
