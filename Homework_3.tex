@@ -36,6 +36,26 @@ Discuss the quality and magnitude of any observed errors/deviations.
 \end{enumerate}
 }
 
+A universal single qubit gate $\hat{U}$ that can transform the state $\ket{0}$ to any state $\ket{\psi}$
+can be composed of a rotation around the $Y$-axis by an angle $\theta$ followed by a rotation around the $Z$-axis by an angle $\phi$:
+\[
+\hat{U}(\theta,\phi) = R_Z(\phi)R_Y(\theta)
+\]
+where
+\begin{align*}
+R_Y(\theta) &= \begin{pmatrix}
+    \cos\frac{\theta}{2} & -\sin\frac{\theta}{2} \\
+    \sin\frac{\theta}{2} & \cos\frac{\theta}{2}
+\end{pmatrix} \\
+R_Z(\phi) &= \begin{pmatrix}
+    e^{-i\frac{\phi}{2}} & 0 \\
+    0 & e^{i\frac{\phi}{2}}
+\end{pmatrix} \\
+\hat{U}(\theta,\phi) &= \begin{pmatrix}
+    \cos\frac{\theta}{2}e^{-i\frac{\phi}{2}} & -\sin\frac{\theta}{2}e^{i\frac{\phi}{2}} \\
+    \sin\frac{\theta}{2}e^{-i\frac{\phi}{2}} & \cos\frac{\theta}{2}e^{i\frac{\phi}{2}}
+\end{pmatrix}
+\end{align*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{2}{Phase estimation: Example implementation (10 marks)
