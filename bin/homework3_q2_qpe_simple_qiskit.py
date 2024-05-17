@@ -10,11 +10,10 @@ import argparse
 import math
 from qiskit import  ClassicalRegister, QuantumCircuit, QuantumRegister
 from qiskit_aer import AerSimulator
-from qiskit.circuit.library import QFT
 from qiskit_ibm_runtime import SamplerV2 as Sampler
 from qiskit_ibm_runtime.fake_provider import FakeProviderForBackendV2 as FakeProvider
+from qiskit.circuit.library import QFT
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
-from qiskit.quantum_info import Operator
 
 parser = argparse.ArgumentParser(description='PHYS440 Homework 3 Q2: Quantum Phase Estimation.')
 parser.add_argument("--operator", type=str, default="Z", help="Operator (Z, Y), (default Z)")
@@ -26,6 +25,9 @@ parser.add_argument("--filename", type=str, help="Filename for circuit diagram")
 parser.add_argument("--isa-filename", type=str, help="Filename for circuit diagram after ISA")
 args = parser.parse_args()
 
+assert args.operator in ["Z", "Y"], "Invalid operator: Must be Z, Y"
+assert args.eigenvector in ["e0", "e1"], "Invalid eigenvector: Must be e0, e1"
+
 qubits = QuantumRegister(3)
 clbits = ClassicalRegister(2)
 circuit = QuantumCircuit(qubits, clbits)
@@ -34,21 +36,17 @@ circuit = QuantumCircuit(qubits, clbits)
 if args.operator == "Z":
     if args.eigenvector == "e0":
         circuit.x(0)
-elif args.operator == "Y":
+else:
     if args.eigenvector == "e0":
         circuit.rx(math.pi/2, 0)
     else:
         circuit.rx(-math.pi/2, 0)
-else:
-    raise ValueError("Invalid operator: Must be Z, Y, or RX")
 circuit.h(1)
 circuit.h(2)
 if args.operator == "Z":
     circuit.cz(1, 0)
-elif args.operator == "Y":
-    circuit.cy(1, 0)
 else:
-    raise ValueError("Invalid operator: Must be Z, Y, or RX")
+    circuit.cy(1, 0)
 
 # 2-qubit QFT, either using builtin or manual implementation:
 if args.qft:
@@ -60,8 +58,7 @@ else:
     circuit.swap(1, 2)
 
 # measure:
-circuit.measure(2, 1)
-circuit.measure(1, 0)
+circuit.measure(qubits[1:], clbits)
 
 if args.filename:
     circuit.draw(output="mpl", filename=args.filename)
