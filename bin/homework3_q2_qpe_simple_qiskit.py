@@ -50,16 +50,17 @@ else:
 
 # 2-qubit QFT, either using builtin or manual implementation:
 if args.qft:
-    circuit.append(QFT(2).inverse(), qubits[1:3])
+    circuit.append(QFT(2).inverse(), qubits[1:])
 else:
     circuit.h(2)
     circuit.cp(-math.pi/2, 1, 2)
     circuit.h(1)
     circuit.swap(1, 2)
 
-# measure:
+# Measure:
 circuit.measure(qubits[1:], clbits)
 
+# Output and run:
 if args.filename:
     circuit.draw(output="mpl", filename=args.filename)
 
