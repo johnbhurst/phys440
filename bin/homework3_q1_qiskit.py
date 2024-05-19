@@ -17,6 +17,7 @@ parser.add_argument("--shots", type=int, default=1024, help="Number of shots")
 parser.add_argument("--theta", type=str, default="0.0", help="Theta angle as a fraction of pi, e.g., 'pi/2'")
 parser.add_argument("--phi", type=str, default="0.0", help="Phi angle as a fraction of pi, e.g., '-pi/4'")
 parser.add_argument("--realign", action="store_true", help="Realign qubit 2 to measure as original state of qubit 0")
+parser.add_argument("--proportion", action="store_true", help="Proportion of 0 (correct) states")
 parser.add_argument("--filename", type=str, help="Filename for circuit diagram")
 args = parser.parse_args()
 
@@ -67,4 +68,7 @@ counts = result[0].data.c0.get_counts()
 count0 = counts.get("000", 0) + counts.get("001", 0) + counts.get("010", 0) + counts.get("011", 0)
 count1 = counts.get("100", 0) + counts.get("101", 0) + counts.get("110", 0) + counts.get("111", 0)
 
-print(f"{{0: {count0}, 1: {count1}}}")
+if args.proportion:
+    print(f"{count0 / args.shots}")
+else:
+    print(f"{{0: {count0}, 1: {count1}}}")

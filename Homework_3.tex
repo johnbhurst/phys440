@@ -8,17 +8,6 @@
 \begin{document}
 \maketitle
 
-\begin{center}
-\noindent\fbox{%
-\parbox{0.95\textwidth}{%
-Note: As far as I can tell, it is currently not possible to run most circuits created in the IBM Quantum Composer directly on IBM Quantum hardware,
-because the Quantum Composer does not support automatic transpilation.
-For this reason, I ran all my circuits using Python Qiskit programs, where it is possible to transpile the circuits.
-I've included the programs, and images of the original circuits and the transpiled circuits in the submitted files.
-}
-}
-\end{center}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{1}{Quantum teleportation (10 marks)
 
@@ -36,7 +25,9 @@ Discuss the quality and magnitude of any observed errors/deviations.
 \end{enumerate}
 }
 
-A universal single qubit gate $\hat{U}$ that can transform the state $\ket{0}$ to any state $\ket{\psi}$
+\begin{enumerate}[(a)]
+\item
+A universal single qubit gate $\hat{U}$
 can be composed of a rotation around the $Y$-axis by an angle $\theta$ followed by a rotation around the $Z$-axis by an angle $\phi$:
 \[
 \hat{U}(\theta,\phi) = R_Z(\phi)R_Y(\theta)
@@ -52,10 +43,84 @@ R_Z(\phi) &= \begin{pmatrix}
     0 & e^{i\frac{\phi}{2}}
 \end{pmatrix} \\
 \hat{U}(\theta,\phi) &= \begin{pmatrix}
-    \cos\frac{\theta}{2}e^{-i\frac{\phi}{2}} & -\sin\frac{\theta}{2}e^{i\frac{\phi}{2}} \\
-    \sin\frac{\theta}{2}e^{-i\frac{\phi}{2}} & \cos\frac{\theta}{2}e^{i\frac{\phi}{2}}
+    e^{-i\frac{\phi}{2}}\cos\frac{\theta}{2} & -e^{i\frac{\phi}{2}}\sin\frac{\theta}{2} \\
+    e^{-i\frac{\phi}{2}}\sin\frac{\theta}{2} & e^{i\frac{\phi}{2}}\cos\frac{\theta}{2}
 \end{pmatrix}
 \end{align*}
+This transformation can transform the state $\ket{0}$ to any state $\ket{\psi}$, up to a global phase shift.
+
+The ``circuit'' for $\hat{U}(\theta,\phi)$ is trivial, and is shown as a component of the teleportation circuit below.
+
+\item
+There is no perfect diagnostic to determine whether the quantum state has been teleported exactly,
+because it is not possible to measure the complete quantum state.
+The best I came up with is to apply $\inv{\hat{U}(\theta,\phi)}$ to the teleported state and measure the result.
+This should transform the result back to the computational basis state $\ket{0}$,
+and when we measure it in the computational basis we should get the result $0$ with probability $1$.
+If we get 0, it is consistent with the state being teleported correctly.
+If we get 1, it is not consistent with the state being teleported correctly.
+
+I implemented a QisKit program to apply $\hat{U}(\theta,\phi)$ to $\ket{0}$,
+teleport the resulting state to another qubit,
+and finally measure the teleported state in the computational basis.
+The initial state is specified by command-line arguments \texttt{---theta} and \texttt{---phi}.
+The command-line option \texttt{---realign} instructs the program to apply $\inv{\hat{U}(\theta,\phi)}$ to the teleported state before measuring it.
+
+For example, without realignment:
+\begin{lstlisting}[language=bash]
+bin/homework3_q1_qiskit.py --theta="pi/3" --phi="pi/2"
+{0: 763, 1: 261}
+\end{lstlisting}
+With realignment:
+\begin{lstlisting}[language=bash]
+bin/homework3_q1_qiskit.py --theta="pi/3" --phi="pi/2" --realign
+{0: 1024, 1: 0}
+\end{lstlisting}
+
+The circuit for the command above is shown below.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/homework3_q1_2pi3_pi2_aer.png}
+\caption{Quantum teleportation}
+\end{figure}
+
+By default the program uses the AER simulator, which produces exact results according to the theory of quantum mechanics.
+The program also accepts a \texttt{---provider} option to simulate the circuit using the noise models of IBM's quantum computers.
+
+Some examples are:
+\begin{lstlisting}[language=bash,basicstyle=\tiny]
+bin/homework3_q1_qiskit.py --theta="pi/3" --phi="pi/2" --realign --provider=fake_sherbrooke
+{0: 948, 1: 76}
+bin/homework3_q1_qiskit.py --theta="pi/3" --phi="pi/2" --realign --provider=fake_osaka
+{0: 949, 1: 75}
+bin/homework3_q1_qiskit.py --theta="pi/3" --phi="pi/2" --realign --provider=fake_kyoto
+{0: 512, 1: 512}
+\end{lstlisting}
+As we have seen before, the \texttt{fake\_kyoto} provider is not very good!
+\end{enumerate}
+
+I ran a range of values for $\theta$ and $\phi$ for several (fake) providers, and did contour plots of the accuracy,
+shown below.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{images/homework3_q1_sherbrooke_contour.png}
+\caption{Quantum teleportation: fake\_sherbrooke accuracy}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{images/homework3_q1_osaka_contour.png}
+\caption{Quantum teleportation: fake\_osaka accuracy}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{images/homework3_q1_sherbrooke_contour.png}
+\caption{Quantum teleportation: fake\_kyoto accuracy}
+\end{figure}
+
+It seems like the accuracy for all of these providers is a bit less in the region where $\theta$ and $\phi$ are around $\pi/2$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{2}{Phase estimation: Example implementation (10 marks)
@@ -73,6 +138,185 @@ of the unitary matrix
 \]
 (\textit{Hint}: Two-bit precision will be enough for the purpose of this task!)
 }
+
+Wong\cite{wong2024} has a detailed worked example for two-qubit precision phase estimation for one of the eigenvalues of the Pauli Z matrix.
+I adapted and generalised Wong's example into a QisKit program that does two-qubit phase estimation for either eigenvector of either of the Pauli Z or Pauli Y matrices.
+
+The circuits generated by the program are shown below.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/homework3_q2_qpe_z_e0.png}
+        \captionsetup{labelformat=empty}
+        \caption{Z, eigenvector 0}
+        % \label{fig:image1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/homework3_q2_qpe_z_e1.png}
+        \captionsetup{labelformat=empty}
+        \caption{Z, eigenvector 1}
+        % \label{fig:image2}
+    \end{minipage}
+    \vfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/homework3_q2_qpe_y_e0.png}
+        \captionsetup{labelformat=empty}
+        \caption{Y, eigenvector 0}
+        % \label{fig:image3}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/homework3_q2_qpe_y_e1.png}
+        \captionsetup{labelformat=empty}
+        \caption{Y, eigenvector 1}
+        % \label{fig:image4}
+    \end{minipage}
+    \caption{Quantum phase estimation}
+    \label{fig:2x2grid}
+\end{figure}
+
+The circuits vary in the state preparation of the input eigenvector,
+and in the controlled unitary operator that is applied.
+
+For the Z matrix the eigenvectors are
+\begin{align*}
+e_0 &= \begin{pmatrix} 0 \\ 1 \end{pmatrix} && \expl{Created with NOT gate}\\
+e_1 &= \begin{pmatrix} 1 \\ 0 \end{pmatrix} && \expl{Created with identity gate}\\
+\end{align*}
+and the controlled unitary operator is the controlled Z gate.
+
+For the Y matrix the eigenvectors are
+\begin{align*}
+e_0 &= \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -i \end{pmatrix} && \expl{Created with $R_X(\pi/2)$}\\
+e_1 &= \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ i \end{pmatrix} && \expl{Created with $R_X(-\pi/2)$}\\
+\end{align*}
+
+Running the program with the arguments for these setups yields the phases for the eigenvalues:
+
+\begin{lstlisting}[language=bash]
+bin/homework3_q2_qpe_simple_qiskit.py --operator=Z --eigenvector=e0
+10: 1024
+bin/homework3_q2_qpe_simple_qiskit.py --operator=Z --eigenvector=e1
+00: 1024
+bin/homework3_q2_qpe_simple_qiskit.py --operator=Y --eigenvector=e0
+10: 1024
+bin/homework3_q2_qpe_simple_qiskit.py --operator=Y --eigenvector=e1
+00: 1024
+\end{lstlisting}
+
+For both matrices the eigenvalues are the same:
+\begin{align*}
+\lambda_0 &= -1 = e^{2i\pi\times \frac{1}{2}} && \expl{$k$=0.10 in binary}\\
+\lambda_1 &= 1 = e^{2i\pi\times 0} && \expl{$k$=0.00 in binary}\\
+\end{align*}
+
+To explore phase estimation further, I studied the $R_X(\theta)$ rotation gate.
+
+For this gate, the eigenvalues and eigenvectors are:
+
+\begin{align*}
+\lambda_0 &= e^{-i\theta/2} & e_0 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix} && \expl{Created with $R_Y(\pi/2)$}\\
+\lambda_1 &= e^{i\theta/2} & e_1 = \frac{1}{\sqrt{2}}\begin{pmatrix} -1 \\ 1 \end{pmatrix} && \expl{Created with $R_Y(-\pi/2)$}\\
+\end{align*}
+
+The program accepts the \texttt{---theta} argument to specify the angle $\theta$, and the \texttt{---bits} argument to specify the number of bits of precision.
+
+Some examples are:
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny]
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="2*pi"
+100000: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="pi"
+010000: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="pi/2"
+001000: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="pi/4"
+000100: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="pi/8"
+000010: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="pi/16"
+000001: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="5*pi/16"
+000101: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="13*pi/16"
+001101: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="21*pi/16"
+010101: 1024
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="21*pi/8"
+101010: 1024
+\end{lstlisting}
+
+Figure \ref{fig:qpe_rx_e1_21pi8} shows the circuit of the last command, with $\theta=21\pi/8$.
+The program uses the QisKit circuit library QFT component, to simplify construction of the circuit with 6 bits of precision.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/homework3_q2_qpe_rx_e1_21pi8.png}
+\caption{Quantum phase estimation with 6 bits of precision}
+\label{fig:qpe_rx_e1_21pi8}
+\end{figure}
+
+Figure \ref{fig:qpe_rx_e1_21pi8_isa} shows the circuit, transpiled to the ISA architecture for the AER simulator.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/homework3_q2_qpe_rx_e1_21pi8_isa.png}
+\caption{Quantum phase estimation (ISA)}
+\label{fig:qpe_rx_e1_21pi8_isa}
+\end{figure}
+
+This circuit gives perfect answers when $\theta$ has values that have a finite binary fractional expansion that fits within the specified number of bits.
+When $\theta$ is some other value, the circuit gives a distribution of values.
+
+As shown in the first command example above, when $\theta=2\pi$ the circuit gives the result `100000' with probability 1.
+When we use $\theta=63\pi/32$, we get this distribution:
+
+\begin{lstlisting}[language=bash]
+bin/homework3_q2_qpe_qiskit.py --operator=RX --eigenvector=e1 --bits=6 --theta="63*pi/32"
+011111: 424
+100011: 6
+100000: 418
+100001: 41
+011110: 51
+011101: 11
+101010: 1
+100100: 8
+010110: 1
+100010: 13
+011010: 5
+101100: 1
+100101: 4
+011100: 7
+101101: 1
+000010: 1
+000100: 1
+100110: 3
+011000: 3
+011011: 6
+010111: 3
+011001: 3
+001000: 1
+110000: 1
+110111: 1
+000001: 1
+001011: 2
+100111: 1
+110011: 1
+101000: 1
+010010: 1
+111100: 1
+000111: 1
+\end{lstlisting}
+
+Most of the values are close to the correct value of 0.1000001 in binary.
+But there are a range of other values too.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \question{3}{Application: Quantum computational chemistry (5 bonus marks)
