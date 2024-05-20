@@ -332,6 +332,7 @@ But there are a range of other values too.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \question{3}{Application: Quantum computational chemistry (5 bonus marks)
 
 Inform yourself about the application of quantum algorithms (especially phase estimation)
@@ -340,6 +341,26 @@ Use and resources at your disposal.
 [A useful starting point could be reading some parts of the article S. McArdle et al.\cite{mcardle2020}]
 Write a short summary (between $\frac{1}{2}$ and 1 page), discussing the main algorithmic ingredients and the quantum advantage.
 }
+
+This answer is mostly excerpts and summarisation of the paper by McArdle et al\cite{mcardle2020}.
+
+Many problems in physical systems involve the analysis of Hamiltonians, in particular finding the ground state energy and the corresponding eigenvector.
+A canonical problem is the \textit{electronic structure problem}, finding the quantum state of the electrons of an atom or molecule.
+Beyond extremely simple systems, such problems are not amenable to analytic solutions; computational methods are used, hence the field of computational chemistry, for example.
+
+Some of the problems belong to the bounded-error quantum polynomial time (BQP) complexity class,
+which means that it is believed (though not yet proved) that the best classical or probabilistic algorithms have exponential running time,
+but quantum algorithms have polynomial running time.
+
+The Variational Quantum Eigensolver (VQE) is a hybrid quantum/classical algorithm that aims to find the lowest eigenvalue of a given Hamiltonian, such as that of a chemical system.
+It is a promising near-term approach because it uses relatively few gates.
+
+Quantum Phase Estimation (QPE) is a broadly-applicable quantum algorithm that can be used to find the lowest energy eigenstate and excited states of a physical Hamiltonian.
+However, QPE requires circuits with a relatively large number of gates, and as such is of limited use for real-world problems until we can create fault-tolerant quantum computers with a larger number of qubits and gates.
+
+Silva\cite{silva2024} includes a chapter on VQE using QisKit with some custom modules.
+Hidary\cite{hidary2021} also discusses VQE, and includes an example of evolving an initial state under a Hamiltonian using Google's Circ and the OpenFermion library.
+
 
 \printbibliography
 \addcontentsline{toc}{section}{References}
