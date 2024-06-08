@@ -24,21 +24,20 @@ args = parser.parse_args()
 # Set up matrices and vectors
 A = np.array([[5/6, -1/3, 0, -1/6], [-1/3, 5/6, -1/6, 0], [0, -1/6, 5/6, -1/3], [-1/6, 0, -1/3, 5/6]])
 b = np.array([1, 2, 3, 2])
-
-eigenvalues, eigenvectors = np.linalg.eig(A)
-D = np.diag(eigenvalues)
-A_reconstructed = np.dot(eigenvectors, np.dot(D, np.linalg.inv(eigenvectors)))
+λ, V = np.linalg.eig(A)
 
 if args.verbose:
+    Λ = np.diag(λ)
+    Aprime = V @ Λ @ np.linalg.inv(V)
     print("Original matrix:\n", A)
-    print("\nEigenvalues:\n", eigenvalues)
-    print("\nEigenvectors:\n", eigenvectors)
-    print("\nDiagonal matrix of eigenvalues:\n", D)
-    print("\nReconstructed matrix:\n", A_reconstructed)
+    print("\nEigenvalues:\n", λ)
+    print("\nEigenvectors:\n", V)
+    print("\nDiagonal matrix of eigenvalues:\n", Λ)
+    print("\nReconstructed matrix:\n", Aprime)
 
-t = 3*math.pi/4
-exp_A = np.diag(np.exp(1j * t * eigenvalues))
-U1 = eigenvectors @ exp_A @ np.linalg.inv(eigenvectors)
+t = 3 * math.pi / 4
+exp_A = np.diag(np.exp(1j * t * λ))
+U1 = V @ exp_A @ np.linalg.inv(V)
 U2 = U1 @ U1
 U4 = U2 @ U2
 invU1 = np.linalg.inv(U1)
@@ -69,7 +68,6 @@ U4gate = UnitaryGate(U4, label=r"$U^4$").control(1)
 circuit.append(U1gate, [qc[0], qb[1], qb[0]])
 circuit.append(U2gate, [qc[1], qb[1], qb[0]])
 circuit.append(U4gate, [qc[2], qb[1], qb[0]])
-# circuit.barrier()
 circuit.append(QFT(3).inverse(), qc)
 theta1 = 2 * np.arcsin(1/4)
 theta2 = 2 * np.arcsin(1/3)
@@ -84,7 +82,6 @@ circuit.append(r2, [qc[0], qc[1], qc[2], qa[0]])
 circuit.append(r3, [qc[0], qc[1], qc[2], qa[0]])
 circuit.append(r4, [qc[0], qc[1], qc[2], qa[0]])
 circuit.append(QFT(3), qc)
-# circuit.barrier()
 invU4gate = UnitaryGate(invU4, label=r"$U^{-4}$").control(1)
 invU2gate = UnitaryGate(invU2, label=r"$U^{-2}$").control(1)
 invU1gate = UnitaryGate(invU1, label=r"$U^{-1}$").control(1)
@@ -124,4 +121,4 @@ for bits, val in sorted(counts.items()):
     if bits.endswith("1"):
         print(f"{bits}: {val/total:.2f}")
 
-print(f"Prob(ancilla |0>) = {a1_total/total:.2f}")
+print(f"Prob(ancilla |0⟩) = {a1_total/total:.2f}")
