@@ -16,6 +16,7 @@ from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 parser = argparse.ArgumentParser(description='PHYS440 Project: HHL on 4x4 system.')
 parser.add_argument("--provider", type=str, default="aer", help="Provider (aer, fake_manila, fake_kyoto, etc), (default aer)")
 parser.add_argument("--shots", type=int, default=1024, help="Number of shots")
+parser.add_argument("--decimals", type=int, default=4, help="Number of decimal places")
 parser.add_argument("--verbose", action="store_true", help="Verbose output")
 parser.add_argument("--filename", type=str, help="Filename for circuit diagram")
 parser.add_argument("--isa-filename", type=str, help="Filename for circuit diagram after ISA")
@@ -23,7 +24,7 @@ args = parser.parse_args()
 
 # Set up matrices and vectors
 A = np.array([[5/6, -1/3, 0, -1/6], [-1/3, 5/6, -1/6, 0], [0, -1/6, 5/6, -1/3], [-1/6, 0, -1/3, 5/6]])
-b = np.array([1, 15, 3, 2])
+b = np.array([1, 2, 3, 2])
 λ, V = np.linalg.eig(A)
 
 if args.verbose:
@@ -65,9 +66,9 @@ circuit.h(qc)
 U1gate = UnitaryGate(U1, label=r"$U$").control(1)
 U2gate = UnitaryGate(U2, label=r"$U^2$").control(1)
 U4gate = UnitaryGate(U4, label=r"$U^4$").control(1)
-circuit.append(U1gate, [qc[0], qb[1], qb[0]])
-circuit.append(U2gate, [qc[1], qb[1], qb[0]])
-circuit.append(U4gate, [qc[2], qb[1], qb[0]])
+circuit.append(U1gate, [qc[0], qb[0], qb[1]])
+circuit.append(U2gate, [qc[1], qb[0], qb[1]])
+circuit.append(U4gate, [qc[2], qb[0], qb[1]])
 circuit.append(QFT(3).inverse(), qc)
 theta1 = 2 * np.arcsin(1/4)
 theta2 = 2 * np.arcsin(1/3)
@@ -85,9 +86,9 @@ circuit.append(QFT(3), qc)
 invU4gate = UnitaryGate(invU4, label=r"$U^{-4}$").control(1)
 invU2gate = UnitaryGate(invU2, label=r"$U^{-2}$").control(1)
 invU1gate = UnitaryGate(invU1, label=r"$U^{-1}$").control(1)
-circuit.append(invU4gate, [qc[2], qb[1], qb[0]])
-circuit.append(invU2gate, [qc[1], qb[1], qb[0]])
-circuit.append(invU1gate, [qc[0], qb[1], qb[0]])
+circuit.append(invU4gate, [qc[2], qb[0], qb[1]])
+circuit.append(invU2gate, [qc[1], qb[0], qb[1]])
+circuit.append(invU1gate, [qc[0], qb[0], qb[1]])
 circuit.barrier()
 circuit.h(qc)
 circuit.barrier()
@@ -113,12 +114,15 @@ if args.isa_filename:
 job = sampler.run([isa_circuit], shots=args.shots)
 result = job.result()
 counts = result[0].data.c0.get_counts()
-total = sum(counts.values())
-a1_total = sum(val for bits, val in counts.items() if bits.endswith("1"))
+total = sum(counts.values()) # sum of all counts
+a1_total = sum(val for bits, val in counts.items() if bits.endswith("1")) # sum of counts when ancilla qubit is 1
+a1_sum_ampls = sum(math.sqrt(val/a1_total) for bits, val in counts.items() if bits.endswith("1")) # sum of |ɑ| amplitude magnitude when ancilla qubit is 1
 
 # Print the results
 for bits, val in sorted(counts.items()):
-    if bits.endswith("1"):
-        print(f"{bits}: {val/a1_total:.2f}")
+    if bits.endswith("0001"):
+        print(f"{bits}\t{val}\t{val/a1_total:.{args.decimals}f}\t{math.sqrt(val/a1_total)/a1_sum_ampls:.{args.decimals}f}")
+    else:
+        print(f"{bits}\t{val}")
 
-print(f"Prob(ancilla |0⟩) = {a1_total/total:.2f}")
+print(f"Prob(ancilla |0⟩) = {a1_total/total:.{args.decimals}f}")
