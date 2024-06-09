@@ -23,7 +23,7 @@ args = parser.parse_args()
 
 # Set up matrices and vectors
 A = np.array([[5/6, -1/3, 0, -1/6], [-1/3, 5/6, -1/6, 0], [0, -1/6, 5/6, -1/3], [-1/6, 0, -1/3, 5/6]])
-b = np.array([1, 2, 3, 2])
+b = np.array([1, 15, 3, 2])
 λ, V = np.linalg.eig(A)
 
 if args.verbose:
@@ -119,6 +119,6 @@ a1_total = sum(val for bits, val in counts.items() if bits.endswith("1"))
 # Print the results
 for bits, val in sorted(counts.items()):
     if bits.endswith("1"):
-        print(f"{bits}: {val/total:.2f}")
+        print(f"{bits}: {val/a1_total:.2f}")
 
 print(f"Prob(ancilla |0⟩) = {a1_total/total:.2f}")
