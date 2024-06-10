@@ -97,14 +97,15 @@ for i, U in enumerate(U_matrices):
     circuit.append(Ugate, [qc[i], *qb])
 circuit.append(QFT(n).inverse(), qc)
 maxλ = max(λ)
-for i, λi in enumerate(λ):
-    ƛi = int(round(2**(n-1) * λi / maxλ))
-    θi = 2 * np.arcsin(1 / ƛi)
-    bits = f"{ƛi:0{n}b}"
-    RYi = RYGate(θi).control(n, ctrl_state=bits)
+ƛ = [int(round(2**(n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is 2^(n-1), i.e. will be binary 0.100...0.
+minƛ = min(ƛ)
+θ = [2 * np.arcsin(minƛ / ƛi) for ƛi in ƛ] # scale so that maximum θ is ArcSin[1]=π
+bits = [f"{ƛi:0{n}b}" for ƛi in ƛ] # bit pattern for each λ, for C0 and C1 control bits of ancilla rotation
+for i in range(len(λ)):
+    RYi = RYGate(θ[i]).control(n, ctrl_state=bits[i])
     circuit.append(RYi, [*qc, qa[0]])
     if args.verbose:
-        print(f"{i}:{λi}:{ƛi}:{bits}:{θi}")
+        print(f"{i}:{λ[i]}:{ƛ[i]}:{bits[i]}:{θ[i]}")
 circuit.append(QFT(n), qc)
 for i, invU in enumerate(reversed(invU_matrices)):
     invUgate = UnitaryGate(invU, label=f"$U^{{{-2**(n-i-1)}}}$").control(1)
