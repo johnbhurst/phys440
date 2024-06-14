@@ -7,12 +7,27 @@ import argparse
 import csv
 import math
 import numpy as np
+import os
+import sys
 from qiskit import  ClassicalRegister, QuantumCircuit, QuantumRegister
 from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import SamplerV2 as Sampler
 from qiskit_ibm_runtime.fake_provider import FakeProviderForBackendV2 as FakeProvider
 from qiskit.circuit.library import QFT, RYGate, UnitaryGate
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
+
+class Colors:
+    GREEN      = '\033[32m'
+    LIGHT_GRAY = '\033[90m' # Bright Black, which often appears as light gray
+    RED        = '\033[31m'
+    YELLOW     = '\033[33m' # Yellow for warnings
+    RESET      = '\033[0m'
+
+def print_color(text, color=None):
+    if os.isatty(sys.stdout.fileno()) and color:
+        print(f"{color}{text}{Colors.RESET}")
+    else:
+        print(text)
 
 parser = argparse.ArgumentParser(description='PHYS440 Project: HHL on arbitrary system.')
 parser.add_argument("--provider", type=str, default="aer", help="Provider (aer, fake_manila, fake_kyoto, etc), (default aer)")
@@ -48,6 +63,15 @@ A = read_matrix(args.a_filename)
 b = read_vector(args.b_filename)
 n = args.clockqubits
 m = int(math.log2(len(b)))
+
+# compute expected solution
+x = np.linalg.solve(A, b) # actual solution vector x
+xabssum = sum(abs(x))     # sum of absolute values of x
+xp = x / xabssum          # normalized x
+actx = {}                 # dict of bit patterns to actual x values
+for i, xi in enumerate(xp):
+    bits = f"{i:0{m}b}" + "0" * n + "1"
+    actx[bits] = xi
 
 if args.verbose:
     print(f"{A=}")
@@ -145,10 +169,14 @@ a1_total = sum(val for bits, val in counts.items() if bits.endswith("1")) # sum 
 a1_sum_ampls = sum(math.sqrt(val/a1_total) for bits, val in counts.items() if bits.endswith("1")) # sum of |ɑ| amplitude magnitude when ancilla qubit is 1
 
 # Print the results
-for bits, val in sorted(counts.items()):
+print("bits\tcount\tfreq\tx estimate\tx actual")
+for bits, count in sorted(counts.items()):
     if bits.endswith("1"):
-        print(f"{bits}\t{val}\t{val/a1_total:.{args.decimals}f}\t{math.sqrt(val/a1_total)/a1_sum_ampls:.{args.decimals}f}")
+        freq = f"{count/total:.{args.decimals}f}"
+        x_est = f"{math.sqrt(count/a1_total)/a1_sum_ampls:.{args.decimals}f}"
+        x_act = f"{actx[bits]:.{args.decimals}f}"
+        print_color(f"{bits}\t{count}\t{freq}\t{x_est}\t{x_act}", Colors.GREEN)
     else:
-        print(f"{bits}\t{val}")
+        print_color(f"{bits}\t{count}", Colors.LIGHT_GRAY)
 
-print(f"Prob(ancilla |0⟩) = {a1_total/total:.{args.decimals}f}")
+print(f"{a1_total/total:.{args.decimals}f}\tProb(ancilla |0⟩)")
