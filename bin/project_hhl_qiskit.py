@@ -104,8 +104,6 @@ else:
     ƛ = [int(round((2**n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is (2^n-1)/2^n, i.e. will be binary 0.111...1.
 minƛ = min(ƛ)
 
-print(f"{ƛ=}")
-print(f"{minƛ=}")
 θ = [2 * np.arcsin(minƛ / ƛi) for ƛi in ƛ] # scale so that maximum θ is ArcSin[1]=π
 bits = [f"{ƛi:0{n}b}" for ƛi in ƛ] # bit pattern for each λ, for C0 and C1 control bits of ancilla rotation
 for i in range(len(λ)):
