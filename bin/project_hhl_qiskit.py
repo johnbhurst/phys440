@@ -19,6 +19,7 @@ parser.add_argument("--provider", type=str, default="aer", help="Provider (aer, 
 parser.add_argument("--shots", type=int, default=1024, help="Number of shots")
 parser.add_argument("--clockqubits", type=int, default=3, help="Number of clock qubits")
 parser.add_argument("--decimals", type=int, default=4, help="Number of decimal places")
+parser.add_argument("--scalingmode", type=str, default="half", help="Eigenvalue scaling mode (half, full) (default half)")
 parser.add_argument("--verbose", action="store_true", help="Verbose output")
 parser.add_argument("--filename", type=str, help="Filename for circuit diagram")
 parser.add_argument("--isa-filename", type=str, help="Filename for circuit diagram after ISA")
@@ -97,8 +98,14 @@ for i, U in enumerate(U_matrices):
     circuit.append(Ugate, [qc[i], *qb])
 circuit.append(QFT(n).inverse(), qc)
 maxλ = max(λ)
-ƛ = [int(round(2**(n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is 2^(n-1), i.e. will be binary 0.100...0.
+if args.scalingmode == "half":
+    ƛ = [int(round(2**(n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is 2^(n-1), i.e. will be binary 0.100...0.
+else:
+    ƛ = [int(round((2**n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is (2^n-1)/2^n, i.e. will be binary 0.111...1.
 minƛ = min(ƛ)
+
+print(f"{ƛ=}")
+print(f"{minƛ=}")
 θ = [2 * np.arcsin(minƛ / ƛi) for ƛi in ƛ] # scale so that maximum θ is ArcSin[1]=π
 bits = [f"{ƛi:0{n}b}" for ƛi in ƛ] # bit pattern for each λ, for C0 and C1 control bits of ancilla rotation
 for i in range(len(λ)):
