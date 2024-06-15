@@ -67,7 +67,7 @@ m = int(math.log2(len(b)))
 # compute expected solution
 x = np.linalg.solve(A, b) # actual solution vector x
 xabssum = sum(abs(x))     # sum of absolute values of x
-xp = x / xabssum          # normalized x
+xp = abs(x) / xabssum          # normalized x
 actx = {}                 # dict of bit patterns to actual x values
 for i, xi in enumerate(xp):
     bits = f"{i:0{m}b}" + "0" * n + "1"
@@ -167,16 +167,34 @@ counts = result[0].data.c0.get_counts()
 total = sum(counts.values()) # sum of all counts
 a1_total = sum(val for bits, val in counts.items() if bits.endswith("1")) # sum of counts when ancilla qubit is 1
 a1_sum_ampls = sum(math.sqrt(val/a1_total) for bits, val in counts.items() if bits.endswith("1")) # sum of |ɑ| amplitude magnitude when ancilla qubit is 1
+ancilla_prob = a1_total / total
 
 # Print the results
 print("bits\tcount\tfreq\tx estimate\tx actual")
-for bits, count in sorted(counts.items()):
-    if bits.endswith("1"):
+for b in range(2**(m+n+1)):
+    bits = f"{b:0{m+n+1}b}"
+    ancilla = bits[-1] == "1"
+    zero = f"{0.0:.{args.decimals}f}"
+
+    x_act = f"{actx[bits]:.{args.decimals}f}" if bits in actx else None
+    if bits in counts:
+        count = counts[bits]
         freq = f"{count/total:.{args.decimals}f}"
         x_est = f"{math.sqrt(count/a1_total)/a1_sum_ampls:.{args.decimals}f}"
-        x_act = f"{actx[bits]:.{args.decimals}f}"
-        print_color(f"{bits}\t{count}\t{freq}\t{x_est}\t{x_act}", Colors.GREEN)
     else:
+        count =  None
+
+    if count is not None and x_act is not None and ancilla:
+        print_color(f"{bits}\t{count}\t{freq}\t{x_est}\t{x_act}", Colors.GREEN)
+    elif count is not None and x_act is not None and not ancilla:
+        print_color(f"{bits}\t{count}\t{freq}\t{x_est}\t{x_act}", Colors.RED)
+    elif count is not None and x_act is None and ancilla:
+        print_color(f"{bits}\t{count}\t{freq}\t{x_est}\t{zero}", Colors.YELLOW)
+    elif count is not None and x_act is None and not ancilla:
         print_color(f"{bits}\t{count}", Colors.LIGHT_GRAY)
+    elif count is None and x_act is not None and ancilla:
+        print_color(f"{bits}\t{0}\t{zero}\t{zero}\t{x_act}", Colors.YELLOW)
+    elif count is None and x_act is not None and not ancilla:
+        print_color(f"{bits}\t{0}\t{zero}\t{zero}\t{x_act}", Colors.RED)
 
 print(f"{a1_total/total:.{args.decimals}f}\tProb(ancilla |0⟩)")
