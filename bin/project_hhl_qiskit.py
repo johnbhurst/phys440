@@ -59,6 +59,7 @@ def read_vector(filename):
         vector = [safe_eval(entry) for row in reader for entry in row]
     return np.array(vector)
 
+π = math.pi
 A = read_matrix(args.a_filename)
 b = read_vector(args.b_filename)
 n = args.clockqubits
@@ -88,7 +89,7 @@ if args.verbose:
     print("\nDiagonal matrix of eigenvalues:\n", Λ)
     print("\nReconstructed matrix:\n", Aprime)
 
-t = math.pi / max(λ)
+t = π / max(λ)
 exp_A = np.diag(np.exp(1j * t * λ))
 U = V @ exp_A @ np.linalg.inv(V)
 invU = np.linalg.inv(U)
@@ -121,14 +122,13 @@ for i, U in enumerate(U_matrices):
     Ugate = UnitaryGate(U, label=f"$U^{{{2**i}}}$").control(1)
     circuit.append(Ugate, [qc[i], *qb])
 circuit.append(QFT(n).inverse(), qc)
-maxλ = max(λ)
 if args.scalingmode == "half":
-    ƛ = [int(round(2**(n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is 2^(n-1), i.e. will be binary 0.100...0.
+    ƛ = [int(round(2**n * t * λi / (2 * π))) for λi in λ] # scale so that maximum ƛ is 2^(n-1), i.e. will be binary 0.100...0.
 else:
-    ƛ = [int(round((2**n-1) * λi / maxλ)) for λi in λ] # scale so that maximum ƛ is (2^n-1)/2^n, i.e. will be binary 0.111...1.
-minƛ = min(ƛ)
+    ƛ = [int(round((2**n-1) * t * λi / π)) for λi in λ] # scale so that maximum ƛ is (2^n-1)/2^n, i.e. will be binary 0.111...1.
+# minƛ = min(ƛ)
 
-θ = [2 * np.arcsin(minƛ / ƛi) for ƛi in ƛ] # scale so that maximum θ is ArcSin[1]=π
+θ = [2 * np.arcsin(min(ƛ) / ƛi) for ƛi in ƛ] # scale so that maximum θ is ArcSin[1]=π
 bits = [f"{ƛi:0{n}b}" for ƛi in ƛ] # bit pattern for each λ, for C0 and C1 control bits of ancilla rotation
 for i in range(len(λ)):
     RYi = RYGate(θ[i]).control(n, ctrl_state=bits[i])
