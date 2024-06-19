@@ -11,7 +11,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-The HHL algorithm for solving linear systems\cite{hhl2009} is one of the first algorithms to promise a quantum speedup for a variety of real-world problems.
+The Harrow-Hassidim-Lloyd (HHL) algorithm for solving linear systems\cite{hhl2009} is one of the first algorithms to promise a quantum speedup for a variety of real-world problems.
 The walk-through in \cite{zaman2023step} shows the mathematics for each step and provides background on the relevant quantum computing concepts.
 The paper gives a numerical example to illustrate the steps, and provides MATLAB and Qiskit code for the example.
 
@@ -25,16 +25,62 @@ The second implementation uses the Wolfram Quantum Framework to implement the ex
 The paper's example uses a 2x2 matrix, and only two clock qubits, which does not sufficiently illustrate some features of the algorithm.
 I created my own example with a 4x4 matrix and three clock qubits, to study these features in more detail.
 
-I then followed up with some more reading on the limits and applicability of HHL, starting from Aaronson's well-known paper \cite{aaronson2015read}.
+I verified my example in Mathematica, and in a Qiskit program run on the IBM Quantum simulator.
+I then created a more general Qiskit program to explore the behaviour and limits of the algorithm with larger matrices and more clock qubits.
 
-The remainder of this report is in two parts.
-Part \ref{sec:implementation} discusses implementation details of the more general numerical example, in particular the handling of the ancilla rotation.
-Part \ref{sec:applications} discusses the applicability of the HHL algorithm to real-world problems.
+I followed up with some more reading on the limits and applicability of HHL, starting from Aaronson's well-known paper \cite{aaronson2015read}.
+
+The remainder of this report is in several parts.
+\begin{itemize}
+\item Part \ref{sec:implementation} discusses implementation details of the more general 4x4 numerical example, in particular the handling of the ancilla rotation.
+\item Part \ref{sec:generalization} describes some experiments with larger systems and more clock qubits.
+\item Part \ref{sec:applications} discusses the applicability of the HHL algorithm to real-world problems.
+\end{itemize}
 
 \section{Implementation Notes}\label{sec:implementation}
 
 This report will not repeat all the details from \cite{zaman2023step}.
 I will focus instead on what I found by generalising the example to a larger matrix and number of clock qubits.
+
+\subsection{Example 4x4 problem}
+
+For the sample problem, I constructed a 4x4 Hermitian matrix with ``friendly'' eigenvalues in ratio 1:2:3:4,
+so that they could be represented exactly using 3 clock qubits.
+
+I defined the matrix like this:
+\begin{equation}\label{eq:matrixa4}
+A = H_4 \begin{pmatrix}
+    \frac{1}{3} & 0 & 0 & 0 \\
+    0 & \frac{2}{3} & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & \frac{4}{3}
+\end{pmatrix} H_4^{\dagger}
+= \begin{pmatrix}
+    \frac{5}{6} & -\frac{1}{3} & 0 & -\frac{1}{6} \\
+    -\frac{1}{3} & \frac{5}{6} & -\frac{1}{6} & 0 \\
+    0 & -\frac{1}{6} & \frac{5}{6} & -\frac{1}{3} \\
+    -\frac{1}{6} & 0 & -\frac{1}{3} & \frac{5}{6}
+\end{pmatrix}
+\end{equation}
+where $H_4$ is a 4x4 Hadamard matrix.
+(There are different possible 4x4 Hadamard matrices, and a common choice is $H_4=H_2\otimes H_2$, but I used Mathematica's \texttt{HadamardMatrix[4]}, which is different.)
+
+For $b$ I used
+\begin{equation}\label{eq:vectorb4}
+b = \begin{pmatrix} 1 \\ 2 \\ 3 \\ 2 \end{pmatrix}
+\end{equation}
+
+The solution is given by
+\begin{equation}\label{eq:solutionx4}
+A^{-1}b = \frac{1}{4}\begin{pmatrix} 19 \\ 23 \\ 29 \\ 25 \end{pmatrix}
+\end{equation}
+In the HHL algorithm with solution is scaled because it is read from the relative frequencies of different measurements.
+For the purpose of checking the algorithm we'll use a scaled solution such that the elements sum to 1:
+\begin{equation}\label{eq:solutionx4num}
+x = \begin{pmatrix} 0.1979 \\ 0.2396 \\ 0.3021 \\ 0.2604 \end{pmatrix}
+\end{equation}
+
+\subsection{Circuit details}
 
 My HHL circuit for a 4x4 matrix and three clock qubits is shown in Figures \ref{fig:circuit1}-\ref{fig:circuit3}.
 The first register, labelled $b$, with two qubits, begins with the input state, and carries the result $x$ at the end.
@@ -157,13 +203,68 @@ $\begin{array}{c}
 \label{fig:circuit3}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.80\textwidth]{images/project_hhl_4x4_mathematica.png}
-\caption{Mathematica circuit for 4x4 problem}
-\label{fig:hhl_4x4_mathematica}
-\end{figure}
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.80\textwidth]{images/project_hhl_4x4_mathematica.png}
+% \caption{Mathematica circuit for 4x4 problem}
+% \label{fig:hhl_4x4_mathematica}
+% \end{figure}
 
+\subsection{Qiskit circuit implementation}
+
+I wrote a Qiskit program to construct the circuit for the 4x4 problem and run it on the IBM Quantum simulator.
+A sample run looks like this:
+
+\begin{lstlisting}[language=Bash]
+bin/project_hhl_4x4_qiskit.py --shots=10000 --filename=project_hhl_4x4.png
+000000  434
+000001  1345    0.1476  0.1944
+010000  1
+010001  2053    0.2252  0.2402
+100000  450
+100001  3274    0.3592  0.3033
+110001  2443    0.2680  0.2620
+Prob(ancilla |0>) = 0.9115
+\end{lstlisting}
+
+The first part of the output is a table in four columns:
+\begin{itemize}
+\item The measurement bits: $b_1$, $b_0$, $q_2$, $q_1$, $q_0$, $a$.
+\item The number of times that measurement was observed (the count).
+\item The frequency of that measurement: count/total.
+\item The square root of the frequency, corresponding to the estimate for the corresponding $x$.
+\end{itemize}
+
+Measurements with the ancilla bit (the least significant, or rightmost bit in the output) having value 1 are counted in the result,
+and measurements with the ancilla bit having value 0 are discarded.
+
+Following this table is the frequency that the ancilla bit was measured in state $\ket{0}$ (having value 1), in this case 0.9115,
+indicating a good effectiveness for the algorithm with these data.
+
+The output from this run is shown more clearly in table \ref{tab:results4x4}, along with the actual $x$ values for comparison.
+We can see from the results that with 10,000 shots, we have got pretty good estimates for $x$.
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|c|r|r|r|r|}
+\hline
+Measurement & Count & Frequency & $x$ estimate & $x$ actual \\
+\hline
+000000 &  434 & & & \\
+000001 & 1345 & 0.1476 & 0.1944 & 0.1979 \\
+010000 &    1 & & & \\
+010001 & 2053 & 0.2252 & 0.2402 & 0.2396 \\
+100000 &  450 & & & \\
+100001 & 3274 & 0.3592 & 0.3033 & 0.3021 \\
+110001 & 2443 & 0.2680 & 0.2620 & 0.2604 \\
+\hline
+\end{tabular}
+\caption{Results for 4x4 system}
+\label{tab:results4x4}
+\end{center}
+\end{table}
+
+Figure \ref{fig:hhl_4x4_qiskit} shows the Qiskit circuit for the 4x4 problem.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.80\textwidth]{images/project_hhl_4x4.png}
@@ -171,18 +272,70 @@ $\begin{array}{c}
 \label{fig:hhl_4x4_qiskit}
 \end{figure}
 
+\section{Generalization}\label{sec:generalization}
 
-% TODO: Figure for Qiskit circuit
+I created a more general Qiskit program to explore the behaviour and limits of the algorithm with larger matrices and more clock qubits.
+I also created an 8x8 Hermitian matrix using a similar procedure to above.
+This Qiskit program prints the actual $x$ solution values (scaled appropriately), as well as the estimates, to make comparison easier.
 
-% 000000  45393
-% 000001  138971  0.1529  0.1977
-% 010000  84
-% 010001  204263  0.2247  0.2397
-% 100000  45357
-% 100001  324365  0.3568  0.3020
-% 110000  84
-% 110001  241483  0.2656  0.2606
-% Prob(ancilla |0⟩) = 0.9091
+For the 8x8 example I ran the program as follows:
+\begin{lstlisting}[language=Bash]
+bin/project_hhl_qiskit.py --shots=1000000 --clockqubits=6 \
+    data/project_hhl/Ahalf_8x8.csv data/project_hhl/b_8x8.csv
+\end{lstlisting}
+
+The output is shown in table \ref{tab:results8x8}.
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|c|r|r|r|r|}
+\hline
+Measurement & Count & Frequency & $x$ estimate & $x$ actual \\
+\hline
+0000000000  &  11019 & & & \\
+0000000001  &     26 & 0.0000 & 0.0091 & 0.0091 \\
+0010000000  &  77671 & & & \\
+0010000001  &    609 & 0.0006 & 0.0440 & 0.0435 \\
+0100000000  &  80853 & & & \\
+0100000001  &  10871 & 0.0109 & 0.1859 & 0.1858 \\
+0110000000  &  12558 & & & \\
+0110000001  &    451 & 0.0005 & 0.0379 & 0.0377 \\
+1000000000  & 230535 & & & \\
+1000000001  &   4079 & 0.0041 & 0.1139 & 0.1141 \\
+1010000000  &  50226 & & & \\
+1010000001  &    370 & 0.0004 & 0.0343 & 0.0329 \\
+1100000000  & 110700 & & & \\
+1100000001  &   6789 & 0.0068 & 0.1469 & 0.1476 \\
+1110000000  & 345591 & & & \\
+1110000001  &  57652 & 0.0577 & 0.4281 & 0.4293 \\
+\hline
+\end{tabular}
+\caption{Results for 8x8 system}
+\label{tab:results8x8}
+\end{center}
+\end{table}
+
+The frequency of the ancilla bit being measured in state $\ket{0}$ was only 0.0808, which is why I needed to run with 1,000,000 shots to get an accurate result.
+The fact that the result was correct, yet the ancilla frequency is so low, is troubling.
+I tried several things to understand the cause of this:
+\begin{itemize}
+\item Ensure the matrix is well-conditioned, as described in \cite{hhl2009}.
+\item Ensure the matrix is sparse.
+\item Construct a Hermitian matrix more directly as two blocks of a a 4x4 matrix and its conjugate transpose.
+\end{itemize}
+None of these measures made much difference to results: the $x$ estimate was always good, but the ancilla frequency was always low.
+
+I also tried two variations of the eigenvalue scaling and clock qubit arrangement.
+In my default setup I scale the eigenvalues so that the largest one is scaled to $\frac{1}{2}$=0.100... (base 2), following the example in \cite{zaman2023step}.
+But this is wasteful, because it effectively reduces the range of values that can be represented by the clock qubits by half.
+So I tried another scheme where I scaled so that the largest eigenvalue is scaled to $0.111...$ (base 2), making maximum use of the clock qubits.
+(For this I needed to use a different input matrix, chosen to make the eigenvalue ratios fit the clock qubit scheme.)
+
+Because none of these approaches resulted in a good value for the ancilla frequency, I suspect that there may be one or more buggs remaining in my implementation.
+
+TODO: Histogram of ancilla values for random 4x4 problems.
+
+TODO: Chi-square tests of observed frequencies for random problems, 4x4 and 8x8.
 
 \section{Applications}\label{sec:applications}
 
