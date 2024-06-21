@@ -318,6 +318,8 @@ Figure \ref{fig:hhl_4x4_qiskit} shows the Qiskit circuit for the 4x4 problem.
 \label{fig:hhl_4x4_qiskit}
 \end{figure}
 
+\newpage
+
 \section{Generalization}\label{sec:generalization}
 
 I created a more general Qiskit program to explore the behaviour and limits of the algorithm with larger matrices and more clock qubits.
@@ -414,11 +416,113 @@ But this is wasteful, because it effectively reduces the range of values that ca
 So I tried another scheme where I scaled so that the largest eigenvalue is scaled to $0.111...$ (base 2), making maximum use of the clock qubits.
 (For this I needed to use a different input matrix, chosen to make the eigenvalue ratios fit the clock qubit scheme.)
 
-Because none of these approaches resulted in a good value for the ancilla frequency, I suspect that there may be one or more bugs remaining in my implementation.
+I noticed that although I got a high probability of about 0.9 of measuring the ancilla qubit in the $\ket{0}$ in my 4x4 example,
+for the 2x2 example in \cite{zaman2023step} the probability was only $\frac{5}{8}$ = 0.625.
+Therefore, I decided to examine the distribution of the ancilla probability for a variety of random problems.
+The probability can in principle be calculated analytically for a given problem, but I obtained a statistical distribution from random trials by actually running the circuits (in the simulator).
 
-TODO: Histogram of ancilla values for random 4x4 problems.
+Figure \ref{fig:ancilla_frequency_dist_2x2} shows the distribution of the ancilla probability for random 2x2 problems with 2, 3, 4 and 5 clock qubits.
+It appears that the number of clock qubits does not affect the distribution much.
+But the distribution is quite spread, and the particular shape probably is a result of the way I constructed random instances.
 
-TODO: Chi-square tests of observed frequencies for random problems, 4x4 and 8x8.
+\begin{figure}[htbp]
+    \centering
+    \captionsetup[subfigure]{labelformat=empty}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_2x2b2.png}
+        \caption{2 clock qubits}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_2x2b3.png}
+        \caption{3 clock qubits}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_2x2b4.png}
+        \caption{4 clock qubits}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_2x2b5.png}
+        \caption{5 clock qubits}
+    \end{subfigure}
+    \caption{Ancilla state $\ket{0}$ probability distribution for random 2x2 problems}
+    \label{fig:ancilla_frequency_dist_2x2}
+\end{figure}
+
+The performance and accuracy guarantees of \cite{hhl2009} places bounds on the ancilla probability that depend on features of the specific problem,
+so I think my 8x8 example was just a bit unlucky in its parameters, even though I was not able to improve things by tuning the parameters.
+By comparison, my 4x4 example happened to be a lucky one with a relatively high ancilla probability.
+It would be interesting to study the way the ancilla probability depends on the problem parameters in more detail.
+
+Figures \ref{fig:ancilla_frequency_dist_4x4} show some distributions of the ancilla probability for random 4x4 and 8x8 problems.
+
+\begin{figure}[htbp]
+    \centering
+    \captionsetup[subfigure]{labelformat=empty}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_4x4b3.png}
+        \caption{2 clock qubits}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_4x4b4.png}
+        \caption{3 clock qubits}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_4x4b5.png}
+        \caption{4 clock qubits}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_4x4b6.png}
+        \caption{5 clock qubits}
+    \end{subfigure}
+    \caption{Ancilla state $\ket{0}$ probability distribution for random 4x4 problems}
+    \label{fig:ancilla_frequency_dist_4x4}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \captionsetup[subfigure]{labelformat=empty}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_8x8b4.png}
+        \caption{4 clock qubits}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_8x8b5.png}
+        \caption{5 clock qubits}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_8x8b6.png}
+        \caption{6 clock qubits}
+    \end{subfigure}
+    \hfill
+    % \begin{subfigure}[b]{0.45\textwidth}
+    %     \centering
+    %     \includegraphics[width=\textwidth]{images/ancilla_frequency_dist_8x8b6.png}
+    %     \caption{5 clock qubits}
+    % \end{subfigure}
+    \caption{Ancilla state $\ket{0}$ probability distribution for random 8x8 problems}
+    \label{fig:ancilla_frequency_dist_8x8}
+\end{figure}
+
+\newpage
 
 \section{Developments}\label{sec:developments}
 
