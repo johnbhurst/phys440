@@ -45,14 +45,18 @@ The remainder of this report is in several parts.
 
 \section{Implementation Notes}\label{sec:implementation}
 
-
-
 This report will not repeat all the details from \cite{zaman2023step}.
 I will focus instead on what I found by generalising the example to a larger matrix and number of clock qubits.
 
 \subsection{Example 4x4 problem}
 
-For the sample problem, I constructed a 4x4 Hermitian matrix with ``friendly'' eigenvalues in ratio 1:2:3:4,
+The HHL algorithm is designed to solve the linear system
+\begin{equation}\label{eq:linearsystem}
+Ax = b
+\end{equation}
+for a Hermitian matrix $A$.
+
+For the sample problem, I constructed a 4x4 Hermitian matrix $A$ with ``friendly'' eigenvalues in ratio 1:2:3:4,
 so that they could be represented exactly using 3 clock qubits.
 
 I defined the matrix like this:
@@ -82,16 +86,28 @@ The solution is given by
 \begin{equation}\label{eq:solutionx4}
 A^{-1}b = \frac{1}{4}\begin{pmatrix} 19 \\ 23 \\ 29 \\ 25 \end{pmatrix}
 \end{equation}
-In the HHL algorithm with solution is scaled because it is read from the relative frequencies of different measurements.
-For the purpose of checking the algorithm we'll use a scaled solution such that the elements sum to 1:
+
+The HHL algorithm uses amplitude encoding for representing the input vector $b$ and the result $x$.
+
+We prepare the input using a scaled version of $b$:
+\[
+\tilde{b} = \frac{b}{\norm{b}}
+\]
+
+When we run the circuit, we will observe outcome frequencies that correspond to the squared amplitudes of a state vector
+that is the amplitude encoding of $x$.
+Essentially we can only retrieve the ratios of the elements of $x$.
+I have adopted a convention of scaling the result so that the elements of $x$ are proportions that sum to 1:
+
+For the example problem we have
 \begin{equation}\label{eq:solutionx4num}
-x = \begin{pmatrix} 0.1979 \\ 0.2396 \\ 0.3021 \\ 0.2604 \end{pmatrix}
+\tilde{x} = \begin{pmatrix} 0.1979 \\ 0.2396 \\ 0.3021 \\ 0.2604 \end{pmatrix}
 \end{equation}
 
 \subsection{Circuit details}
 
-My HHL circuit for a 4x4 matrix and three clock qubits is shown in Figures \ref{fig:circuit1}-\ref{fig:circuit3}.
-The first register, labelled $b$, with two qubits, begins with the input state, and carries the result $x$ at the end.
+My HHL circuit for a 4x4 matrix and three clock qubits is shown in figures \ref{fig:circuit1}, \ref{fig:circuit2} and \ref{fig:circuit3}.
+The first register, labelled $b$, with two qubits, begins with the input state $b$, and carries the result $x$ at the end.
 The second register, labelled $q$, with three qubits, is the clock register.
 The third register, labelled $a$, with one qubit, is the ancilla register.
 
@@ -104,6 +120,18 @@ psi1 =
         Join[{QuantumState[Normalize[b]]},
               ConstantArray[QuantumState[{1, 0}], n + 1]]]
 \end{lstlisting}
+In real world applications, state preparation is a nontrivial problem, as discussed in \cite{aaronson2015read} and \cite{hhl2009}.
+
+For the phase estimation part of the circuit, following \cite{zaman2023step},
+I calculated the eigenvalues $\lambda_j$ of the matrix $A$ and a matrix $V$ of the eigenvectors of $A$,
+and then the unitary operator $U$ as follows:
+\begin{align*}
+t & = \frac{\pi}{\max\{\lambda_j\}} \\
+\Lambda & = V^{\dagger}AV && \expl{Diagonal matrix of eigenvalues}\\
+ U & = e^{i\Lambda t} && \expl{Unitary operator}\\
+\end{align*}
+The details of these calculations are not shown here, but can be found in the accompanying Mathematica notebook.
+
 \begin{figure}[h]
 \centering
 $\begin{array}{c}
@@ -121,13 +149,32 @@ $\begin{array}{c}
 \caption{State preparation and QPE}
 \label{fig:circuit1}
 \end{figure}
-In real world applications, state preparation is a nontrivial problem, as discussed in \cite{aaronson2015read} and \cite{hhl2009}.
 
 This part of the circuit is conceptually the same as in \cite{zaman2023step},
 but because there are four values in the input $b$ and four unknowns in $x$, the unitary operation in the QPE has two target qubits instead of one.
 Also, because there are three clock qubits, in QPE we apply $U$, $U^2$ and $U^4$, and the IQFT subcomponent is extended to three qubits.
 
-Figure \ref{fig:circuit2} shows the ancilla rotation.
+The 2x2 example in \cite{zaman2023step}, shown in figure \ref{fig:ancilla2x2},
+uses a simple ancilla rotation with two separate rotations on the ancilla qubit, one for each clock qubit.
+\begin{figure}[h]
+\centering
+$\begin{array}{c}
+\Qcircuit @C=.5em @R=.8em {
+\lstick{a}   & \qw & \gate{RY(\theta_3=\frac{\pi}{3})} & \gate{RY(\theta_4=\pi)} & \qw \\
+\lstick{q_0} & \qw & \qw & \ctrl{-1}  & \qw \\
+\lstick{q_1} & \qw & \ctrl{-2}  & \qw & \qw \\
+}
+\end{array}$
+\caption{Ancilla rotation for 2x2}
+\label{fig:ancilla2x2}
+\end{figure}
+
+As discussed in class, I was confused about the number of rotations on the ancilla qubit for larger problems.
+It seemed to me from the pattern of control bits and rotations in the 2x2 circuit that there is one rotation per clock qubit.
+
+However, for the algorithm to work perfectly and invert all the eigenvalues, there needs to be a rotation per eigenvalue.
+This can be achieved using a more complex arrangement of control qubits, and utilising a combination of ``control-on'' and ``control-off'' control qubits.
+Figure \ref{fig:circuit2} shows the ancilla rotation for the example 4x4 problem.
 \begin{figure}[h]
 \centering
 $\begin{array}{c}
@@ -143,28 +190,11 @@ $\begin{array}{c}
 \caption{Ancilla rotation}
 \label{fig:circuit2}
 \end{figure}
-
-This part of the circuit is the most interesting part of the project.
-
-As discussed in class, I was confused about the number of rotations on the ancilla qubit.
-In \cite{zaman2023step} there are two rotations on the ancilla qubit, using angles $\theta_1$ and $\theta_2$, and controlled by the two clock qubits.
-The angles $\theta_1$ and $\theta_2$ are calculated from the eigenvalues of the matrix $A$.
-So it was unclear to me whether there should be a distinct rotation were per eigenvalue, or per clock qubit.
-It seemed to me from the construction of the circuit that it must be a rotation per clock qubit.
-And also, in real-world applications we might have billions of unknowns and eigenvalues, but we will always have a fairly limited number of clock qubits, determined by the precision desired.
-So it seemed to me that it would not be practical to consider rotations per eigenvalue.
-
-It turns out that my thinking was not correct.
-The rotations on the ancilla qubit achieve the inversion of the eigenvalues,
-and so to get a solution with perfect accuracy it is necessary to have a rotation per eigenvalue.
-However, in real world implementations, it's unlikely this would actually be done for large numbers of input qubits.
-By being selective and careful about the rotations, an approximate solution satisfies the accuracy bounds in \cite{hhl2009}.
-A recent paper, \cite{morgan2024enhanced}, discusses filtering rotations ``by relevance'' to maintain circuit depth advantages.
-
-In the circuit in Figure \ref{fig:circuit2}, I have implemented four rotations with angles $\theta_1$, $\theta_2$, $\theta_3$ and $\theta_4$,
-which correspond precisely to the eigenvalues $\lambda_1$, $\lambda_2$, $\lambda_3$ and $\lambda_4$ of the matrix $A$.
+In this circuit there are four rotations, with angles $\theta_1$, $\theta_2$, $\theta_3$ and $\theta_4$,
+which correspond to the eigenvalues $\lambda_1$, $\lambda_2$, $\lambda_3$ and $\lambda_4$ of the matrix $A$.
 They are controlled by the clock qubits according to the binary representation of the eigenvalue phases on the clock qubits.
-So for example, the first eigenvalue is $\lambda_1=\frac{4}{3}$.
+
+For example, the largest eigenvalue is $\lambda_1=\frac{4}{3}$.
 In the Hamiltonian $e^{i\Lambda t}$ this eigenvalue has corresponding value $e^{i\lambda_1t}=e^{i\frac{4}{3}\times\frac{3\pi}{4}}=e^{2\pi i \frac{1}{2}}$.
 Therefore the phase for this eigenvalue is $\phi_1=\frac{1}{2}$, which in binary is 0.100b.
 Therefore the rotation for this eigenvalue should occur when qubit $q_2$ is set and qubits $q_1$ and $q_0$ are not set.
@@ -186,8 +216,13 @@ $\lambda_4=\frac{1}{3}$ & $e^{i\lambda_4t}=e^{i \frac{1}{3} \times \frac{3\pi}{4
 \hline
 \end{tabular}
 \end{center}
-The controlling qubits and rotation angles correspond to the circuit portion in Figure \ref{fig:circuit2}.
+The control qubit configurations and angles in the table correspond to the controlled rotations on the ancilla qubit in the circuit portion in Figure \ref{fig:circuit2}.
 % TODO: How might this have been shown more clearly in zaman2023step?
+
+In real world implementations, where there might be billions of eigenvalues, it would be prohibitive to have separate rotations for each eigenvalue.
+By being selective and careful about the rotations, an approximate solution satisfies the accuracy bounds in \cite{hhl2009}.
+A recent paper, \cite{morgan2024enhanced}, discusses filtering rotations ``by relevance'' to maintain circuit depth advantages.
+Other approaches are suggested elsewhere, including some of the papers discussed in section \ref{sec:developments}.
 
 Figure \ref{fig:circuit3} shows the reverse QPE and measurement.
 As in \cite{zaman2023step}, if the ancilla qubit is measured in state $\ket{1}$,
@@ -211,16 +246,19 @@ $\begin{array}{c}
 \label{fig:circuit3}
 \end{figure}
 
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.80\textwidth]{images/project_hhl_4x4_mathematica.png}
-% \caption{Mathematica circuit for 4x4 problem}
-% \label{fig:hhl_4x4_mathematica}
-% \end{figure}
+The accompanying Mathematica notebook shows all of the calculations for the example and verifies the result of the circuit results.
+The Mathematica versiob of the circuit is shown in figure \ref{fig:hhl_4x4_mathematica}.
+(The Mathematica circuit is ``upside down'' because Mathematica uses a different convention for the order of qubits in the circuit diagram: it places the least-significant qubit at the bottom.)
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/project_hhl_4x4_mathematica.png}
+\caption{Mathematica circuit for 4x4 problem}
+\label{fig:hhl_4x4_mathematica}
+\end{figure}
 
 \subsection{Qiskit circuit implementation}
 
-I wrote a Qiskit program to construct the circuit for the 4x4 problem and run it on the IBM Quantum simulator.
+I wrote a Qiskit program to construct the same circuit for the 4x4 problem and run it on the IBM Quantum simulator.
 A sample run looks like this:
 
 \begin{lstlisting}[language=Bash]
@@ -237,7 +275,7 @@ Prob(ancilla |0>) = 0.9115
 
 The first part of the output is a table in four columns:
 \begin{itemize}
-\item The measurement bits: $b_1$, $b_0$, $q_2$, $q_1$, $q_0$, $a$.
+\item The measurement bits: $b_1b_0q_2q_1q_0a$.
 \item The number of times that measurement was observed (the count).
 \item The frequency of that measurement: count/total.
 \item The square root of the frequency, corresponding to the estimate for the corresponding $x$.
