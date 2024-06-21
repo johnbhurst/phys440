@@ -126,7 +126,6 @@ if args.scalingmode == "half":
     ƛ = [int(round(2**n * t * λi / (2 * π))) for λi in λ] # scale so that maximum ƛ is 2^(n-1), i.e. will be binary 0.100...0.
 else:
     ƛ = [int(round((2**n-1) * t * λi / π)) for λi in λ] # scale so that maximum ƛ is (2^n-1)/2^n, i.e. will be binary 0.111...1.
-# minƛ = min(ƛ)
 
 θ = [2 * np.arcsin(min(ƛ) / ƛi) for ƛi in ƛ] # scale so that maximum θ is ArcSin[1]=π
 bits = [f"{ƛi:0{n}b}" for ƛi in ƛ] # bit pattern for each λ, for C0 and C1 control bits of ancilla rotation
