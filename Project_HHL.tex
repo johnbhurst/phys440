@@ -324,6 +324,43 @@ I created a more general Qiskit program to explore the behaviour and limits of t
 I also created an 8x8 Hermitian matrix using a similar procedure to above.
 This Qiskit program prints the actual $x$ solution values (scaled appropriately), as well as the estimates, to make comparison easier.
 
+I verified the program on the 2x2 example of \cite{zaman2023step}:
+\begin{lstlisting}[language=Bash]
+bin/project_hhl_qiskit.py --shots=10000 --clockqubits=2 \
+    data/project_hhl/A_2x2.csv data/project_hhl/b_2x2.csv
+bits    count   freq    x estimate      x actual
+0000    1931
+0001    600     0.0600  0.2472  0.2500
+1000    1904
+1001    5565    0.5565  0.7528  0.7500
+0.6165  Prob(ancilla |0>)
+\end{lstlisting}
+
+These results, both the 0.25/0.75 values for $x$, and the ancilla probability, agree with the results in \cite{zaman2023step}.
+
+The 2x2 circuit it produces is shown in figure \ref{fig:hhl_2x2_qiskit}.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{images/project_hhl_2x2.png}
+\caption{Qiskit circuit for 2x2 problem}
+\label{fig:hhl_2x2_qiskit}
+\end{figure}
+
+I also verified the program on my 4x4 example:
+\begin{lstlisting}[language=Bash]
+bin/project_hhl_qiskit.py --shots=10000 --clockqubits=3 \
+    data/project_hhl/A_4x4.csv data/project_hhl/b_4x4.csv
+bits    count   freq    x estimate      x actual
+000000  438
+000001  1380    0.1380  0.1972  0.1979
+010001  2015    0.2015  0.2383  0.2396
+100000  477
+100001  3268    0.3268  0.3034  0.3021
+110000  1
+110001  2421    0.2421  0.2612  0.2604
+0.9084  Prob(ancilla |0>)
+\end{lstlisting}
+
 For the 8x8 example I ran the program as follows:
 \begin{lstlisting}[language=Bash]
 bin/project_hhl_qiskit.py --shots=1000000 --clockqubits=6 \
