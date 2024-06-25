@@ -3,14 +3,14 @@
 # John Hurst (john.b.hurst@gmail.com)
 # 2024-06-21
 
-# echo "2x2, 2 clock qubits"
-# bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=2 --filename=ancilla_frequency_dist_2x2b2.png
-# echo "2x2, 3 clock qubits"
-# bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=3 --filename=ancilla_frequency_dist_2x2b3.png
-# echo "2x2, 4 clock qubits"
-# bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=4 --filename=ancilla_frequency_dist_2x2b4.png
-# echo "2x2, 5 clock qubits"
-# bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=5 --filename=ancilla_frequency_dist_2x2b5.png
+echo "2x2, 2 clock qubits"
+bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=2 --filename=ancilla_frequency_dist_2x2b2.png
+echo "2x2, 3 clock qubits"
+bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=3 --filename=ancilla_frequency_dist_2x2b3.png
+echo "2x2, 4 clock qubits"
+bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=4 --filename=ancilla_frequency_dist_2x2b4.png
+echo "2x2, 5 clock qubits"
+bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=5 --filename=ancilla_frequency_dist_2x2b5.png
 echo "2x2, 6 clock qubits"
 bin/project_hhl_ancilla_dist_qiskit.py --runs=1000 --size=2 --clockqubits=6 --filename=ancilla_frequency_dist_2x2b6.png
 
