@@ -1,0 +1,84 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys440}
+
+\title{Controlled gates}
+\author{John Hurst}
+\date{June 2024}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{4x4}
+
+\begin{align*}
+\begin{array}{c}
+\Qcircuit{
+& \ctrl{1} & \qwa \\
+& \gate{U} & \qwa \\
+}
+\end{array}
+&& = && \outerproduct{0} \otimes I + \outerproduct{1} \otimes U
+&& = &&
+\left(
+\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & \multicolumn{2}{c}{\multirow{2}{*}{U}} \\
+0 & 0 & \multicolumn{2}{c}{} \\
+\end{array}
+\right)
+\\
+\begin{array}{c}
+\Qcircuit{
+& \ctrlo{1} & \qwa \\
+& \gate{U} & \qwa \\
+}
+\end{array}
+&& = && \outerproduct{0} \otimes U + \outerproduct{1} \otimes I
+&& = &&
+\left(
+\begin{array}{cccc}
+\multicolumn{2}{c}{\multirow{2}{*}{U}} & 0 & 0 \\
+\multicolumn{2}{c}{} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{array}
+\right)
+\\
+\begin{array}{c}
+\Qcircuit{
+& \gate{U} & \qwa \\
+& \ctrl{-1} & \qwa \\
+}
+\end{array}
+&& = && I \otimes \outerproduct{0} + U \otimes \outerproduct{1}
+&& = &&
+\left(
+\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & U_{11} & 0 & U_{12} \\
+0 & 0 & 1 & 0 \\
+0 & U_{21} & 0 & U_{22} \\
+\end{array}
+\right)
+\\
+\begin{array}{c}
+\Qcircuit{
+& \gate{U} & \qwa \\
+& \ctrlo{-1} & \qwa \\
+}
+\end{array}
+&& = && U \otimes \outerproduct{0} + I \otimes \outerproduct{1}
+&& = &&
+\left(
+\begin{array}{cccc}
+U_{11} & 0 & U_{12} & 0 \\
+0 & 1 & 0 & 0 \\
+U_{21} & 0 & U_{22} & 0 \\
+0 & 0 & 0 & 1 \\
+\end{array}
+\right)
+\end{align*}
+
+\end{document}
