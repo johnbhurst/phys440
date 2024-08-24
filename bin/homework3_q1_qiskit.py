@@ -23,6 +23,7 @@ parser.add_argument("--step-phi", type=str, default="pi/6", help="Step phi angle
 parser.add_argument("--steps", type=int, default=0, help="Number of steps")
 parser.add_argument("--realign", action="store_true", help="Realign qubit 2 to measure as original state of qubit 0")
 parser.add_argument("--proportion", action="store_true", help="Proportion of 0 (correct) states")
+parser.add_argument("--deferred", action="store_true", help="Use deferred measurement")
 parser.add_argument("--filename", type=str, help="Filename for circuit diagram")
 args = parser.parse_args()
 
@@ -50,13 +51,20 @@ def run(theta, phi):
     circuit.cx(q1, q2)
     circuit.cx(q0, q1)
     circuit.h(q0)
-    circuit.measure(q0, c0)
-    circuit.measure(q1, c1)
-    circuit.x(q2).c_if(c1, 1)
-    circuit.z(q2).c_if(c0, 1)
+    if args.deferred:
+        circuit.cx(q1, q2)
+        circuit.cz(q0, q2)
+    else:
+        circuit.measure(q0, c0)
+        circuit.measure(q1, c1)
+        circuit.x(q2).c_if(c1, 1)
+        circuit.z(q2).c_if(c0, 1)
     if args.realign:
         circuit.rz(-phi, q2)
         circuit.ry(-theta, q2)
+    if args.deferred:
+        circuit.measure(q0, c0)
+        circuit.measure(q1, c1)
     circuit.measure(q2, c2)
 
     if args.provider == 'aer':
