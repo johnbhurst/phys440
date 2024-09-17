@@ -65,9 +65,9 @@ else:
 for i in range(n):
     circuit.h(i+1)
 for i in range(n):
-    if args.operator == "Z" and i % 2 == 1:
+    if args.operator == "Z" and n-i == 1:
         circuit.cz(n-i, input_qubit)
-    elif args.operator == "Y" and i % 2 == 1:
+    elif args.operator == "Y" and n-i == 1:
         circuit.cy(n-i, input_qubit)
     elif args.operator == "RX":
         circuit.crx(theta*(2**(n-i-1)), n-i, input_qubit)
