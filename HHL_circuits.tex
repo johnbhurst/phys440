@@ -1,0 +1,70 @@
+\documentclass[12pt]{extarticle}
+\usepackage{phys440}
+
+\title{PHYS460 - Project: HHL Algorithm}
+\author{John Hurst}
+\date{September 2024}
+
+\begin{document}
+\maketitle
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \begin{yquant}
+            qubit {$b = \ket{b}$} b;
+            qubit {$q_{\idx} = \ket{0}$} q[2];
+            qubit {$a = \ket{0}$} a;
+            box {$H$} q;
+            [name=u1] box {$U^1$} b | q[1];
+            [name=u2] box {$U^2$} b | q[0];
+            box {$\text{QFT}^{\dagger}$} (q);
+            [name=rot1] box {$R_Y(\theta_1)$} a | q[0];
+            [name=rot2] box {$R_Y(\theta_2)$} a | q[1];
+            box {QFT} (q);
+            [name=iu2] box {$U^{-2}$} b | q[0];
+            [name=iu1] box {$U^{-1}$} b | q[1];
+            box {$H$} q;
+            measure a;
+            measure b;
+            output {$\ket{\tilde{x}}$} b;
+        \end{yquant}
+        \end{tikzpicture}
+    \caption{HHL circuit for 2x2 system with 2 qubits phase precision.}
+    \label{fig:qpe12}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \resizebox{0.9\textwidth}{!}{
+        \begin{tikzpicture}
+        \begin{yquant}
+            qubit {} b[2];
+            init {$b=\ket{b}$} (b[-1]);
+            qubit {$q_{\idx} = \ket{0}$} q[3];
+            qubit {$a = \ket{0}$} a;
+            box {$H$} q;
+            [name=u1] box {$U^1$} (b) | q[2];
+            [name=u2] box {$U^2$} (b) | q[1];
+            [name=u4] box {$U^4$} (b) | q[0];
+            box {$\text{QFT}^{\dagger}$} (q);
+            [name=rot1] box {$R_Y(\theta_1)$} a | q[0] ~ q[1,2];
+            [name=rot2] box {$R_Y(\theta_2)$} a | q[1,2] ~ q[0];
+            [name=rot3] box {$R_Y(\theta_3)$} a | q[1] ~ q[0,2];
+            [name=rot4] box {$R_Y(\theta_4)$} a | q[2] ~ q[0,1];
+            box {QFT} (q);
+            [name=iu4] box {$U^{-4}$} (b) | q[0];
+            [name=iu2] box {$U^{-2}$} (b) | q[1];
+            [name=iu1] box {$U^{-1}$} (b) | q[2];
+            box {$H$} q;
+            measure a;
+            measure b;
+            output {$\ket{\tilde{x}}$} (b);
+        \end{yquant}
+        \end{tikzpicture}
+    }
+    \caption{HHL circuit for 4x4 system with 3 qubits phase precision.}
+    \label{fig:qpe23}
+\end{figure}
+
+\end{document}
