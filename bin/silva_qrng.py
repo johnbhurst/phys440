@@ -2,10 +2,9 @@
 # Quantum Random Number Generator from "Quantum Computing by Practice" by Vladimir Silva, 2nd Ed, Apress 2024
 
 import argparse
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import SamplerV2 as Sampler
-from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 
 parser = argparse.ArgumentParser(description="Generate random numbers using a quantum circuit.")
 parser.add_argument("--size", type=int, default=100, help="Number of random numbers to generate.")
@@ -21,8 +20,7 @@ def qrng(n):
     for i in range(n):
         circuit.measure(quantum_r[i], classical_r[i])
     backend = AerSimulator()
-    pm = generate_preset_pass_manager(backend=backend, optimization_level=1)
-    isa_circuit = pm.run(circuit)
+    isa_circuit = transpile(circuit, backend)
     sampler = Sampler(backend)
     shots = 1024
     job = sampler.run([isa_circuit], shots=shots)
