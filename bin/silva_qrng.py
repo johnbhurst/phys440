@@ -15,15 +15,12 @@ def qrng(n):
     quantum_r = QuantumRegister(n, "qr")
     classical_r = ClassicalRegister(n, "cr")
     circuit = QuantumCircuit(quantum_r, classical_r, name="QRNG")
-    for i in range(n):
-        circuit.h(quantum_r[i])
-    for i in range(n):
-        circuit.measure(quantum_r[i], classical_r[i])
+    circuit.h(quantum_r)
+    circuit.measure(quantum_r, classical_r)
     backend = AerSimulator()
-    isa_circuit = transpile(circuit, backend)
     sampler = Sampler(backend)
     shots = 1024
-    job = sampler.run([isa_circuit], shots=shots)
+    job = sampler.run([transpile(circuit, backend)], shots=shots)
     result = job.result()
     counts = result[0].data.cr.get_counts()
     bits = ""
