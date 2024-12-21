@@ -30,10 +30,7 @@ def qrng(n):
 
 size = args.size
 qubits = 8
-numbers = []
-for i in range(size):
-    n = qrng(qubits)
-    numbers.append(n)
+numbers = [qrng(qubits) for i in range(size)]
 
 if args.binfile:
     with open(args.binfile, "wb") as f:
