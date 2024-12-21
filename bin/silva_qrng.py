@@ -2,7 +2,7 @@
 # Quantum Random Number Generator from "Quantum Computing by Practice" by Vladimir Silva, 2nd Ed, Apress 2024
 
 import argparse
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
 from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import SamplerV2 as Sampler
 
@@ -20,7 +20,7 @@ def qrng(n):
     backend = AerSimulator()
     sampler = Sampler(backend)
     shots = 1024
-    job = sampler.run([transpile(circuit, backend)], shots=shots)
+    job = sampler.run([circuit], shots=shots)
     result = job.result()
     counts = result[0].data.cr.get_counts()
     bits = ""
