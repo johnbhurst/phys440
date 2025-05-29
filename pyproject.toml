@@ -1,0 +1,16 @@
+[project]
+name = "phys440"
+version = "0.1.0"
+description = "PHYS440 study"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cirq",
+    "jupyter",
+    "matplotlib",
+    "pandas",
+    "pylatexenc",
+    "qiskit",
+    "qiskit-aer",
+    "qiskit-ibm-runtime",
+]
